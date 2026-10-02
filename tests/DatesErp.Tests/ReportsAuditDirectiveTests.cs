@@ -185,7 +185,8 @@ public class ReportsAuditDirectiveTests
         Assert.True(delivery.DeleteDraft(d1.Id).Ok);
         Assert.DoesNotContain(dno, Run(host, "delivery").Rows.Select(x => x[0]?.ToString() ?? ""));
         var audit = Run(host, "audit");
-        Assert.True(audit.Rows.Any(x => (x[6]?.ToString() ?? "").Contains(dno) || (x[3]?.ToString() ?? "").Contains("حذف")));
+        Assert.Contains(audit.Rows,
+            x => (x[6]?.ToString() ?? "").Contains(dno) || (x[3]?.ToString() ?? "").Contains("حذف"));
 
         // حارس الكمية: اعتماد تسليم بلا رصيد تام مرفوض (لا تسليم بأكثر من المتاح)
         var d2 = delivery.Save(cust1, "2026-08-19", null, new List<CustomerDeliveryItemDto> { new() { ProductId = 3, PackagingTypeId = 2, PackageCount = 5, QtyKg = 100 } });

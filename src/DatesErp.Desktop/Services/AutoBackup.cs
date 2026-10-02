@@ -122,9 +122,14 @@ public static class AutoBackup
             attemptedFile = file;
             string dbName = db.Database.GetDbConnection().Database.Replace("]", "]]", StringComparison.Ordinal);
             string sqlFile = file.Replace("'", "''", StringComparison.Ordinal);
+            // BACKUP/RESTORE require a database identifier and DISK target in SQL syntax,
+            // so these two statements cannot parameterize them. Escape the closing bracket
+            // and apostrophe above before composing the command text.
+#pragma warning disable EF1002
             db.Database.ExecuteSqlRaw($"BACKUP DATABASE [{dbName}] TO DISK = N'{sqlFile}' WITH INIT, CHECKSUM");
             backupCreated = true;
             db.Database.ExecuteSqlRaw($"RESTORE VERIFYONLY FROM DISK = N'{sqlFile}'");
+#pragma warning restore EF1002
             ErrorLog.WriteInfo("AutoBackup: نسخة ما قبل الترحيل جاهزة — " + file);
             return true;
         }

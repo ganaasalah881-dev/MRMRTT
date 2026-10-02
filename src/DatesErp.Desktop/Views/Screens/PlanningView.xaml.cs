@@ -49,9 +49,7 @@ public partial class PlanningView : UserControl
     private bool _locked;
     private bool _programmaticScope; // حارس: تغييرات النطاق البرمجية لا تفتح النوافذ تلقائياً
     private Views.ErpToolbar _toolbar;
-    // §1.50.60 — تحسينات عامة 7-ب/7-ج/7-هـ: حفظ تلقائي + تكرار صف + تنقل لوحة مفاتيح
-    private System.Windows.Threading.DispatcherTimer _autoSaveTimer;
-    private DateTime _lastAutoSave = DateTime.MinValue;
+    // §1.50.67: الحفظ التلقائي معطّل بطلب المستخدم؛ يُحذف فقط أي ملف مسودة قديم.
     private string AutoSavePath => System.IO.Path.Combine(DatesErp.Infrastructure.Connection.AppConfig.ConfigDirectory, "drafts", $"PlanningDraft_{(AppContainer.Provider?.GetService(typeof(ICurrentSession)) is ICurrentSession cs ? cs.UserId : 0)}.json");
 
     // §B58: قوائم الخلاياEditable (وردية/خط/عبوة) — تُقرأ من قاعدة البيانات في Load
@@ -75,10 +73,7 @@ public partial class PlanningView : UserControl
             if (e.OldItems != null)
                 foreach (PlanRowUi row in e.OldItems) { row.PropertyChanged -= RowUi_Changed; row.QuantityGuard = null; }
         };
-        // §1.50.67 FIX: إلغاء الحفظ التلقائي — كان يحفظ خطط وهمية (بناءً على طلب المستخدم)
-        // _autoSaveTimer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(60) };
-        // _autoSaveTimer.Tick += (_, _) => AutoSaveDraft();
-        _autoSaveTimer = null;
+        // §1.50.67 FIX: إلغاء الحفظ التلقائي — كان يحفظ خططاً وهمية (بناءً على طلب المستخدم).
         // §1.50.60 7-هـ: تنقل لوحة مفاتيح مثل Excel
         RowsGrid.PreviewKeyDown += RowsGrid_PreviewKeyDown;
         Loaded += (_, _) =>
@@ -102,8 +97,7 @@ public partial class PlanningView : UserControl
                 }
             }
             catch { }
-            // TryRestoreAutoSave();
-            // _autoSaveTimer?.Start();
+            // لا تُستعاد المسودة تلقائياً؛ ذلك كان ينشئ خططاً وهمية في هذا الإصدار.
             // §فتح خطة محددة طُلبت من شاشة أخرى (لوحة التحكم) ثم تصفير الطلب
             if (MainWindow.PendingPlanIdToOpen is int pid)
             {

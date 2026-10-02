@@ -262,7 +262,7 @@ public class DeliveryPickingDirectiveTests
         // §10 — العميل الثاني لا يرى أي شيء من رصيد الأول
         var rows2 = pick.GetPickList(cust2, new DateTime(2026, 9, 10));
         Assert.DoesNotContain(rows2, r => r.LotId == lotA);
-        Assert.Empty(rows2.Where(r => r.ProductId == 3));
+        Assert.DoesNotContain(rows2, r => r.ProductId == 3);
     }
 
     // ── §9 عند الاعتماد: إعادة فحص الرصيد لحظة الاعتماد (تزامن) ──
@@ -388,7 +388,8 @@ public class DeliveryPickingDirectiveTests
         Assert.Equal(2, inRange.Rows.Count(x => !Convert.ToString(x[0]).Contains("إجمالي") && !Convert.ToString(x[0]).Contains("الإجمالي")));
         var outRange = Svc<IReportService>(host).Run("delivery_analysis",
             new Dictionary<string, string> { ["from"] = "2026-09-11", ["to"] = "2026-09-30" });
-        Assert.Empty(outRange.Rows.Where(x => !Convert.ToString(x[0]).Contains("إجمالي") && !Convert.ToString(x[0]).Contains("الإجمالي")));
+        Assert.DoesNotContain(outRange.Rows,
+            x => !Convert.ToString(x[0]).Contains("إجمالي") && !Convert.ToString(x[0]).Contains("الإجمالي"));
 
         // المسودة تظهر ب حالتها ولا تُقرأ كنهائية: إجمالي «معتمد / مسودة» يتغير
         var draft = dlv.Save(cust, "12/09/2026", null, pick.AllocateFifo(cust, new List<(int, int)> { (3, 50) }, new DateTime(2026, 9, 12)));

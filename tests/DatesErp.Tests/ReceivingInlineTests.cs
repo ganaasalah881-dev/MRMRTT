@@ -101,7 +101,7 @@ public class ReceivingInlineTests
         }
         Assert.Equal(6, items.Count); // 5 مملوءة + 1 فارغة جاهزة
         Assert.Equal(5, items.Count(r => r.ProductId != 0));
-        Assert.Single(items.Where(r => r.IsEmptyRow));
+        Assert.Single(items, r => r.IsEmptyRow);
     }
 
     [Fact]

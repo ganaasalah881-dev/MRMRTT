@@ -37,7 +37,7 @@ public sealed class TodayProductionRowDto : System.ComponentModel.INotifyPropert
     // اختيار الإصدار فقط؛ الأصناف والكميات المنقولة من الخطة للعرض ولا تُعدّل من هذه الشاشة.
     private bool _isSelected;
     public bool IsSelected { get => _isSelected; set { _isSelected = value; PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(IsSelected))); } }
-    public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+    public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 }
 
 /// <summary>§v1.50.34 — مجموعة يوم معتمدة بلا أمر بعد (زر «إضافة أمر من الخطة»).</summary>

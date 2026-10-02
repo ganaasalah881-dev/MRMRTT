@@ -118,18 +118,18 @@ public partial class ThemeSettingsView : UserControl
             var property = typeof(ThemeProfileDto).GetProperty(field.KeyName);
             property?.SetValue(profile, field.Value);
         }
-        profile.Mode = Tag(ModeBox, profile.Mode);
+        profile.Mode = ReadTag(ModeBox, profile.Mode);
         profile.BodyFontFamily = Text(BodyFontBox, profile.BodyFontFamily);
         profile.HeadingFontFamily = Text(HeadingFontBox, profile.HeadingFontFamily);
         profile.BaseFontSize = Number(BaseFontBox, profile.BaseFontSize); profile.PageTitleFontSize = Number(PageTitleBox, profile.PageTitleFontSize);
         profile.SectionTitleFontSize = Number(SectionTitleBox, profile.SectionTitleFontSize); profile.TableFontSize = Number(TableFontBox, profile.TableFontSize);
         profile.ButtonFontSize = Number(ButtonFontBox, profile.ButtonFontSize); profile.HeadingBold = HeadingBoldCheck.IsChecked == true; profile.BodyBold = BodyBoldCheck.IsChecked == true;
         profile.BorderThickness = Number(BorderThicknessBox, profile.BorderThickness); profile.CornerRadius = Number(CornerRadiusBox, profile.CornerRadius); profile.Padding = Number(PaddingBox, profile.Padding);
-        profile.InputStyle = Tag(InputStyleBox, profile.InputStyle); profile.ShowFieldUnderlines = UnderlineCheck.IsChecked == true; profile.ShowTextBoxBorders = TextBoxBorderCheck.IsChecked == true; profile.ShowButtonBorders = ButtonBorderCheck.IsChecked == true;
-        profile.ButtonStyle = Tag(ButtonStyleBox, profile.ButtonStyle); profile.ButtonWidth = Number(ButtonWidthBox, profile.ButtonWidth); profile.ButtonHeight = Number(ButtonHeightBox, profile.ButtonHeight); profile.IconSize = Number(IconSizeBox, profile.IconSize);
-        profile.IconPosition = Tag(IconPositionBox, profile.IconPosition); profile.RowHeight = Number(RowHeightBox, profile.RowHeight); profile.TableTextAlignment = Tag(AlignmentBox, profile.TableTextAlignment);
+        profile.InputStyle = ReadTag(InputStyleBox, profile.InputStyle); profile.ShowFieldUnderlines = UnderlineCheck.IsChecked == true; profile.ShowTextBoxBorders = TextBoxBorderCheck.IsChecked == true; profile.ShowButtonBorders = ButtonBorderCheck.IsChecked == true;
+        profile.ButtonStyle = ReadTag(ButtonStyleBox, profile.ButtonStyle); profile.ButtonWidth = Number(ButtonWidthBox, profile.ButtonWidth); profile.ButtonHeight = Number(ButtonHeightBox, profile.ButtonHeight); profile.IconSize = Number(IconSizeBox, profile.IconSize);
+        profile.IconPosition = ReadTag(IconPositionBox, profile.IconPosition); profile.RowHeight = Number(RowHeightBox, profile.RowHeight); profile.TableTextAlignment = ReadTag(AlignmentBox, profile.TableTextAlignment);
         profile.ShowTableBorders = TableBorderCheck.IsChecked == true; profile.ShowColumnDividers = ColumnDividerCheck.IsChecked == true; profile.ShowPagination = PaginationCheck.IsChecked == true;
-        profile.TitleBarHeight = Number(TitleBarHeightBox, profile.TitleBarHeight); profile.SidebarWidth = Number(SidebarWidthBox, profile.SidebarWidth); profile.ContentWidth = Number(ContentWidthBox, profile.ContentWidth); profile.SidebarStyle = Tag(SidebarStyleBox, profile.SidebarStyle); profile.ShowSidebar = SidebarCheck.IsChecked == true;
+        profile.TitleBarHeight = Number(TitleBarHeightBox, profile.TitleBarHeight); profile.SidebarWidth = Number(SidebarWidthBox, profile.SidebarWidth); profile.ContentWidth = Number(ContentWidthBox, profile.ContentWidth); profile.SidebarStyle = ReadTag(SidebarStyleBox, profile.SidebarStyle); profile.ShowSidebar = SidebarCheck.IsChecked == true;
         profile.CardShadowEnabled = ShadowCheck.IsChecked == true; profile.ShadowDepth = Number(ShadowDepthBox, profile.ShadowDepth); profile.ShadowOpacity = Number(ShadowOpacityBox, profile.ShadowOpacity);
     }
 
@@ -218,7 +218,7 @@ public partial class ThemeSettingsView : UserControl
     private static void Set(TextBox box, double value) => box.Text = value.ToString("0.##", CultureInfo.InvariantCulture);
     private static double Number(TextBox box, double fallback) => double.TryParse(box.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : fallback;
     private static string Text(ComboBox box, string fallback) => (box.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? fallback;
-    private static string Tag(ComboBox box, string fallback) => (box.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? fallback;
+    private static string ReadTag(ComboBox box, string fallback) => (box.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? fallback;
     private static void SelectText(ComboBox box, string value) => box.SelectedItem = box.Items.OfType<ComboBoxItem>().FirstOrDefault(x => string.Equals(x.Content?.ToString(), value, StringComparison.OrdinalIgnoreCase));
     private static void SelectTag(ComboBox box, string value) => box.SelectedItem = box.Items.OfType<ComboBoxItem>().FirstOrDefault(x => string.Equals(x.Tag?.ToString(), value, StringComparison.OrdinalIgnoreCase));
 }

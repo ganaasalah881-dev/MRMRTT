@@ -22,7 +22,7 @@ public class ActualProductionTests
         FullWorkflowTests.SeedQuickOrderPacked(host, db, out var orderId, out _);
 
         var delivery = host.Get<IProductionDeliveryService>();
-        var order = Assert.Single(delivery.GetActualDeliveryOrders().Where(o => o.OrderId == orderId));
+        var order = Assert.Single(delivery.GetActualDeliveryOrders(), o => o.OrderId == orderId);
         var input = new ActualProductionDto
         {
             OrderId = orderId,
