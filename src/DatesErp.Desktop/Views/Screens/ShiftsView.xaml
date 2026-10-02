@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.ShiftsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <StackPanel>
+        <!-- الوردية تحدد الوقت فقط -->
+        <Border Style="{StaticResource Card}" Margin="0,0,0,8">
+            <StackPanel>
+                <Border Style="{StaticResource SecHeader}" Margin="-12,-12,-12,8">
+                    <TextBlock x:Name="FormTitle" Text="⏰ إضافة/تعديل وردية — الوردية تحدد الوقت المتاح فقط (لا طاقة للأصناف هنا)" FontSize="12" FontWeight="Bold" Foreground="#0A246A"/>
+                </Border>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="اسم الوردية *:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="NameBox" Width="200"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="وقت البداية:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="StartBox" Width="110" Text="06:00"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="وقت النهاية:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="EndBox" Width="110" Text="14:00"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="ساعات العمل:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="TotalBox" Width="100" Text="8" TextChanged="Hours_Changed"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="التوقفات (ساعات):" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="DownBox" Width="100" Text="0" TextChanged="Hours_Changed"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="ساعات الإنتاج الفعلية:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="EffBox" Width="110"/>
+                    </StackPanel>
+                </WrapPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button Content="💾 حفظ الوردية" Style="{StaticResource ErpPrimaryButton}" Click="Save_Click"/>
+                    <Button Content="↩ جديد/مسح" Style="{StaticResource ErpButton}" Click="New_Click"/>
+                    <Button x:Name="DeleteBtn" Content="🗑 حذف الوردية" Style="{StaticResource ErpDangerButton}" Click="Delete_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource WhiteCard}">
+            <DockPanel>
+                <TextBlock x:Name="ShiftsHint" DockPanel.Dock="Top" Text="الورديات — تظهر بعد الضغط على «بحث» أو بعد الحفظ (نقر مزدوج على أي وردية يفتحها في النموذج أعلاه للتعديل)" FontWeight="Bold" FontSize="12" Foreground="#0A246A" Margin="0,0,0,6" TextWrapping="Wrap"/>
+                <DataGrid x:Name="ShiftsGrid" Height="260" MouseDoubleClick="ShiftsGrid_DoubleClick">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="الاسم" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="البداية" Binding="{Binding Start}" Width="90"/>
+                        <DataGridTextColumn Header="النهاية" Binding="{Binding End}" Width="90"/>
+                        <DataGridTextColumn Header="ساعات العمل" Binding="{Binding Total}" Width="100"/>
+                        <DataGridTextColumn Header="التوقفات" Binding="{Binding Down}" Width="90"/>
+                        <DataGridTextColumn Header="ساعات الإنتاج الفعلية" Binding="{Binding Eff}" Width="140"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

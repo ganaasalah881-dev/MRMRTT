@@ -1,0 +1,250 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.ShipmentReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <!-- §B101/§46 — تقرير حركة شحنة العميل: رأس الشحنة ← سلسلة المراحل ← مؤشرات ←
+         أوامر (تفاصيل عند نقر مزدوج) ← تسليمات العميل. تصدير/طباعة بنفس البيانات.
+         §46 تطوير التصميم: هوية مركز التقارير الموحدة (بطاقات بيضاء مدوّرة، ترويسات كحلية
+         بلمسة ذهبية، نصوص أردوازية) — كل الألوان من موارد الثيم بلا لون مضمّن. -->
+    <UserControl.Resources>
+        <!-- بطاقة الهوية الموحدة §46 -->
+        <Style x:Key="RptCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ErpLineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="12"/>
+        </Style>
+        <!-- عنوان قسم كحلي مع خط ذهبي سفلي -->
+        <Style x:Key="RptSectionTitle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="13.5"/>
+            <Setter Property="Foreground" Value="{StaticResource NavyBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+        <Style x:Key="RptGrid" TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="FontSize" Value="13.5"/>
+            <Setter Property="RowHeight" Value="34"/>
+            <Setter Property="ColumnHeaderHeight" Value="40"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource LightBgBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="ColumnHeaderStyle" Value="{StaticResource ReportHeaderStyle}"/>
+        </Style>
+    </UserControl.Resources>
+
+    <DockPanel LastChildFill="True" Margin="8">
+
+        <!-- شريط الفلاتر + التصدير -->
+        <Border DockPanel.Dock="Top" Style="{StaticResource RptCard}" Margin="0,0,0,8">
+            <WrapPanel>
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="خطة الإنتاج:" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox x:Name="PlanBox" Width="340" SelectionChanged="Filter_Changed"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="العميل:" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox x:Name="CustBox" Width="190" SelectionChanged="Filter_Changed"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock Text="الصنف:" Style="{StaticResource FieldLabel}"/>
+                    <ComboBox x:Name="ProdBox" Width="190" SelectionChanged="Filter_Changed"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <Button Content="🔄 تحديث" Style="{StaticResource ErpButton}" Click="Refresh_Click" Margin="0,0,8,0"/>
+                    <Button Content="🖨️ طباعة" Style="{StaticResource ErpButton}" Click="Print_Click" Margin="0,0,8,0"/>
+                    <Button Content="📄 PDF" Style="{StaticResource ErpButton}" Click="Pdf_Click" Margin="0,0,8,0"/>
+                    <Button Content="📊 Excel" Style="{StaticResource ErpButton}" Click="Excel_Click"/>
+                </StackPanel>
+            </WrapPanel>
+        </Border>
+
+        <!-- رأس الشحنة -->
+        <Border DockPanel.Dock="Top" Style="{StaticResource RptCard}" Margin="0,0,0,8">
+            <StackPanel>
+                <DockPanel>
+                    <Border x:Name="StatusChip" CornerRadius="12" Padding="12,4" HorizontalAlignment="Left"
+                            Background="{StaticResource ErpSurfaceBrush}" VerticalAlignment="Center">
+                        <TextBlock x:Name="HStatus" Text="—" FontWeight="Bold" FontSize="13.5"
+                                   Foreground="{StaticResource ErpMutedBrush}"/>
+                    </Border>
+                    <TextBlock x:Name="HTitle" FontSize="17" FontWeight="Bold" Foreground="{StaticResource NavyBrush}"
+                               VerticalAlignment="Center" Text="اختر خطة الإنتاج لعرض شحنتها"/>
+                </DockPanel>
+                <Border Height="2" Background="{StaticResource AccentBrush}" Opacity="0.55" Margin="0,8,0,8"/>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,18,4">
+                        <TextBlock Text="أول دخول (خطة):" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock x:Name="HEntry" FontWeight="SemiBold" Foreground="{StaticResource ErpInkBrush}"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,4">
+                        <TextBlock Text="دخلت الإنتاج:" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock x:Name="HProdDate" FontWeight="SemiBold" Foreground="{StaticResource ErpInkBrush}"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,4">
+                        <TextBlock Text="شُغّلت بـ:" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock x:Name="HOrders" FontWeight="SemiBold" Foreground="{StaticResource ErpInkBrush}"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,4">
+                        <TextBlock Text="تاريخ التشغيل المجدول:" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock x:Name="HScheduled" FontWeight="SemiBold" Foreground="{StaticResource ErpInkBrush}"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,4">
+                        <TextBlock Text="أيام الدورة (اعتماد ← آخر تسليم):" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock x:Name="HCycle" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,4">
+                        <TextBlock Text="الخطوة الحالية:" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock x:Name="HCurrent" FontWeight="SemiBold" Foreground="{StaticResource ErpWarnBrush}"/>
+                    </StackPanel>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- سلسلة المراحل (5 رقائق) -->
+        <Border DockPanel.Dock="Top" Style="{StaticResource RptCard}" Margin="0,0,0,8">
+            <StackPanel x:Name="StepperPanel" Orientation="Horizontal" HorizontalAlignment="Center"/>
+        </Border>
+
+        <!-- مؤشرات الإجماليات -->
+        <Border DockPanel.Dock="Top" Style="{StaticResource RptCard}" Background="{StaticResource ErpSurfaceBrush}"
+                Padding="10,8" Margin="0,0,0,8">
+            <UniformGrid Columns="5">
+                <StackPanel Margin="4,0">
+                    <TextBlock Text="المخطط (كجم)" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="KPlanned" FontSize="17" FontWeight="Bold" Foreground="{StaticResource NavyBrush}" HorizontalAlignment="Center"/>
+                    <ProgressBar x:Name="PPlanned" Height="6" Margin="0,4,0,0" Maximum="100"/>
+                </StackPanel>
+                <StackPanel Margin="4,0">
+                    <TextBlock Text="المُنتَج (كجم)" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="KProduced" FontSize="17" FontWeight="Bold" Foreground="{StaticResource ErpInkBrush}" HorizontalAlignment="Center"/>
+                    <ProgressBar x:Name="PProduced" Height="6" Margin="0,4,0,0" Maximum="100"/>
+                </StackPanel>
+                <StackPanel Margin="4,0">
+                    <TextBlock Text="المقبول — جودة (كجم)" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="KAccepted" FontSize="17" FontWeight="Bold" Foreground="{StaticResource ErpInfoBrush}" HorizontalAlignment="Center"/>
+                    <ProgressBar x:Name="PAccepted" Height="6" Margin="0,4,0,0" Maximum="100"/>
+                </StackPanel>
+                <StackPanel Margin="4,0">
+                    <TextBlock Text="المستلم — مخزن التام (كجم)" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="KReceived" FontSize="17" FontWeight="Bold" Foreground="{StaticResource ErpOkBrush}" HorizontalAlignment="Center"/>
+                    <ProgressBar x:Name="PReceived" Height="6" Margin="0,4,0,0" Maximum="100"/>
+                </StackPanel>
+                <StackPanel Margin="4,0">
+                    <TextBlock Text="المُسلَّم للعميل (كجم)" Style="{StaticResource FieldLabel}" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="KDelivered" FontSize="17" FontWeight="Bold" Foreground="{StaticResource ErpWarnBrush}" HorizontalAlignment="Center"/>
+                    <ProgressBar x:Name="PDelivered" Height="6" Margin="0,4,0,0" Maximum="100"/>
+                </StackPanel>
+            </UniformGrid>
+        </Border>
+
+        <!-- أزرار أسفل التقرير -->
+        <Border DockPanel.Dock="Bottom" Style="{StaticResource RptCard}" Padding="10,6" Margin="0,8,0,0">
+            <DockPanel>
+                <TextBlock x:Name="CountLabel" VerticalAlignment="Center" Foreground="{StaticResource ErpMutedBrush}" Margin="10,0,0,0"/>
+                <TextBlock Text="تصدير:  🖨️ طباعة · 📄 PDF · 📊 Excel  (نفس بيانات التقرير أعلاه)"
+                           VerticalAlignment="Center" Foreground="{StaticResource ErpMutedBrush}"/>
+            </DockPanel>
+        </Border>
+
+        <!-- منطقة التفاصيل: أوامر + تفاصيل الأمر + تسليمات -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- الأوامر -->
+            <Border Grid.Row="0" Style="{StaticResource RptCard}" Margin="0,0,0,8">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <TextBlock Text="🏭 أوامر الإنتاج (مخرجات كل أمر) — نقر مزدوج: التفاصيل الكاملة"
+                                   Style="{StaticResource RptSectionTitle}"/>
+                        <Border Height="2" Background="{StaticResource AccentBrush}" Opacity="0.55" Margin="0,0,0,8"/>
+                    </StackPanel>
+                    <DataGrid x:Name="OrdersGrid" Style="{StaticResource RptGrid}" MaxHeight="220"
+                              MouseDoubleClick="OrdersGrid_DoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Seq}" Width="34"/>
+                            <DataGridTextColumn Header="رقم الأمر" Binding="{Binding OrderNumber}" Width="110"/>
+                            <DataGridTextColumn Header="تاريخ الإنتاج" Binding="{Binding ProductionDate}" Width="86"/>
+                            <DataGridTextColumn Header="الوردية / الخط" Binding="{Binding ShiftLine}" Width="130"/>
+                            <DataGridTextColumn Header="الحالة" Binding="{Binding StatusAr}" Width="90"/>
+                            <DataGridTextColumn Header="مخطط (كجم)" Binding="{Binding PlannedKg}" Width="80"/>
+                            <DataGridTextColumn Header="منتَج (كجم)" Binding="{Binding ProducedKg}" Width="80"/>
+                            <DataGridTextColumn Header="التشغيل (جلسات/خسارة/خام)" Binding="{Binding ProductionText}" Width="*"/>
+                            <DataGridTextColumn Header="فحص الجودة (مقبول/مرفوض/قرار)" Binding="{Binding QualityText}" Width="*"/>
+                            <DataGridTextColumn Header="تسليم الإنتاج للمخزن" Binding="{Binding WarehouseText}" Width="*"/>
+                            <DataGridTextColumn Header="استلام مخزن التام" Binding="{Binding ReceiptText}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <!-- تفاصيل الأمر المحدد -->
+            <Border x:Name="OrderDetailBox" Grid.Row="1" Visibility="Collapsed"
+                    Background="{StaticResource ErpSurfaceBrush}" BorderBrush="{StaticResource NavyBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock x:Name="OrderDetailTitle" FontWeight="Bold" Foreground="{StaticResource NavyBrush}" FontSize="13.5" Margin="0,0,0,6"/>
+                    <Border Height="2" Background="{StaticResource AccentBrush}" Opacity="0.55" Margin="0,0,0,8"/>
+                    <WrapPanel>
+                        <StackPanel Margin="0,0,18,4">
+                            <TextBlock Text="أُنشئ:" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="ODCreated" Foreground="{StaticResource ErpInkBrush}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,18,4">
+                            <TextBlock Text="عُتمد/صُرف:" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="ODApproved" Foreground="{StaticResource ErpInkBrush}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,18,4">
+                            <TextBlock Text="الإقفال:" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="ODClosed" Foreground="{StaticResource ErpMutedBrush}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,18,4">
+                            <TextBlock Text="الوردية/الخط:" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="ODShift" Foreground="{StaticResource ErpInkBrush}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,18,4">
+                            <TextBlock Text="مخطط ← مُنتج (حصة الشحنة):" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="ODQty" Foreground="{StaticResource ErpInkBrush}"/>
+                        </StackPanel>
+                    </WrapPanel>
+                    <TextBlock x:Name="ODProduction" Margin="0,3,0,0" Foreground="{StaticResource ErpInkBrush}" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="ODQuality" Margin="0,3,0,0" Foreground="{StaticResource ErpInkBrush}" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="ODWarehouse" Margin="0,3,0,0" Foreground="{StaticResource ErpInkBrush}" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="ODReceipt" Margin="0,3,0,0" Foreground="{StaticResource ErpInkBrush}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- تسليمات العميل -->
+            <Border Grid.Row="2" Style="{StaticResource RptCard}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <TextBlock Text="🚚 تسليمات العميل — حتى اكتمال الشحنة" Style="{StaticResource RptSectionTitle}"/>
+                        <Border Height="2" Background="{StaticResource AccentBrush}" Opacity="0.55" Margin="0,0,0,8"/>
+                    </StackPanel>
+                    <DataGrid x:Name="CdsGrid" Style="{StaticResource RptGrid}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Seq}" Width="34"/>
+                            <DataGridTextColumn Header="رقم المستند" Binding="{Binding DocNumber}" Width="120"/>
+                            <DataGridTextColumn Header="التاريخ" Binding="{Binding DateText}" Width="90"/>
+                            <DataGridTextColumn Header="الكمية (كجم)" Binding="{Binding QtyKg}" Width="86"/>
+                            <DataGridTextColumn Header="الكراتين" Binding="{Binding Cartons}" Width="70"/>
+                            <DataGridTextColumn Header="الحالة" Binding="{Binding StatusAr}" Width="130"/>
+                            <DataGridTextColumn Header="الاعتماد (بم/متى)" Binding="{Binding ApprovalText}" Width="200"/>
+                            <DataGridTextColumn Header="مُفوتر (كجم)" Binding="{Binding InvoicedKg}" Width="86"/>
+                            <DataGridTextColumn Header="متبقي للفوترة (كجم)" Binding="{Binding BillableKg}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <Border BorderBrush="#94A3B8" BorderThickness="1">
+        <DockPanel Background="#F1F5F9">
+            <!-- شريط العنوان -->
+            <Border DockPanel.Dock="Top" Padding="10,4">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#0A246A" Offset="0"/>
+                        <GradientStop Color="#3A6EA5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Right" Foreground="White" FontWeight="Bold" FontSize="13"
+                               Text="[MAIN] - [نظام إدارة وتصنيع التمور - الشاشة الرئيسية] - (الشركة اليمنية لتعبئة وتصنيع التمور)"/>
+                </DockPanel>
+            </Border>
+
+            <!-- شريط المعلومات -->
+            <Border DockPanel.Dock="Top" Background="#F1F5F9" BorderBrush="#94A3B8" BorderThickness="0,0,0,1" Padding="12,4">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <TextBlock Text="المستخدم الحالي:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="DashUser" Foreground="#0A246A" FontSize="11.5" Margin="4,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="السنة التشغيلية:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center"/>
+                        <TextBlock Text="2026" Foreground="#0A246A" FontSize="11.5" Margin="4,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="حالة النظام:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center"/>
+                        <TextBlock Text="● متصل وجاهز 🟢" Foreground="#008000" FontWeight="Bold" FontSize="11.5" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Border Background="#DCE6F1" BorderBrush="#94A3B8" BorderThickness="1" Padding="5,1">
+                            <TextBlock Text="MRPMAIN1000" FontFamily="Consolas" FontWeight="Bold" Foreground="#0A246A" FontSize="11"/>
+                        </Border>
+                        <TextBlock x:Name="DashDate" FontSize="11" Foreground="#555555" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- شريط أدوات الإدارات -->
+            <Border DockPanel.Dock="Top" Background="#F1F5F9" BorderBrush="#94A3B8" BorderThickness="0,0,0,1" Padding="6,4">
+                <StackPanel x:Name="DeptToolbar" Orientation="Horizontal" FlowDirection="RightToLeft"/>
+            </Border>
+
+            <!-- شريط التدقيق السفلي -->
+            <Border DockPanel.Dock="Bottom" Background="#F1F5F9" BorderBrush="#94A3B8" BorderThickness="0,1,0,0" Padding="10,4">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <TextBlock Text="المستخدم: " FontSize="11"/>
+                        <TextBlock x:Name="FootUser" FontSize="11" FontWeight="Bold"/>
+                        <TextBlock Text="  |  الرمز البرمجي: " FontSize="11"/>
+                        <TextBlock Text="MRPMAIN1000" FontSize="11" FontWeight="Bold"/>
+                        <TextBlock Text="  |  الجهة: " FontSize="11"/>
+                        <TextBlock Text="الشركة اليمنية لتعبئة وتصنيع التمور" FontSize="11" FontWeight="Bold"/>
+                    </StackPanel>
+                    <TextBlock x:Name="FootDb" DockPanel.Dock="Left" Text="قاعدة البيانات: SQL Server المركزية" FontSize="11"/>
+                </DockPanel>
+            </Border>
+
+            <!-- المحتوى -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#F1F5F9">
+                <StackPanel Margin="10">
+                    <!-- مركز المهام والعمليات الموجهة -->
+                    <Border Background="#F8FAFC" BorderBrush="#0A246A" BorderThickness="1" Padding="10">
+                        <StackPanel>
+                            <Border Background="#0A246A" Padding="10,5" Margin="-10,-10,-10,8">
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Right" Text="⚡ مركز المهام والعمليات الموجهة (Workflow Action Center) — مهامي بانتظار الإجراء"
+                                               Foreground="White" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock x:Name="TaskUserChip" DockPanel.Dock="Left" Foreground="White" FontSize="11" Background="#1E40AF" Padding="8,2"/>
+                                </DockPanel>
+                            </Border>
+                            <WrapPanel x:Name="TasksPanel"/>
+
+                            <Border x:Name="PendingGridBox" Background="White" BorderBrush="#94A3B8" BorderThickness="1" Padding="8" Margin="0,6,0,0">
+                                <StackPanel>
+                                    <DockPanel Margin="0,0,0,6">
+                                        <TextBlock DockPanel.Dock="Right" Text="📋 خطط الإنتاج بانتظار قرارك (اعتماد فوري):"
+                                                   FontSize="11.5" FontWeight="Bold" Foreground="#0A246A"/>
+                                        <Button Content="🔒 اعتماد الخطة المحددة" Style="{StaticResource ErpApproveButton}"
+                                                DockPanel.Dock="Left" Click="ApprovePlan_Click"/>
+                                    </DockPanel>
+                                    <DataGrid x:Name="PendingGrid" Height="130" MouseDoubleClick="OpenPlan_Click">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="رقم الخطة" Binding="{Binding الرقم}" Width="130"/>
+                                            <DataGridTextColumn Header="العنوان والفترة 📅" Binding="{Binding العنوان_والفترة}" Width="*"/>
+                                            <DataGridTextColumn Header="الأصناف" Binding="{Binding الأصناف}" Width="70"/>
+                                            <DataGridTextColumn Header="إجمالي الوزن ⚖️" Binding="{Binding إجمالي_الوزن}" Width="110"/>
+                                            <DataGridTextColumn Header="الكراتين 📦" Binding="{Binding الكراتين}" Width="80"/>
+                                            <DataGridTextColumn Header="الحالة" Binding="{Binding الحالة}" Width="150"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border x:Name="WhGridBox" Background="White" BorderBrush="#FDBA74" BorderThickness="1" Padding="8" Margin="0,6,0,0">
+                                <StackPanel>
+                                    <DockPanel Margin="0,0,0,6">
+                                        <TextBlock DockPanel.Dock="Right" Text="🏬 أوامر تسليم مُصدَرة بانتظار سند الاستلام:"
+                                                   FontSize="11.5" FontWeight="Bold" Foreground="#9A3412"/>
+                                        <Button Content="🧾 فتح شاشة استلام الإنتاج" Style="{StaticResource ErpButton}"
+                                                DockPanel.Dock="Left" Click="OpenReceipt_Click"/>
+                                    </DockPanel>
+                                    <DataGrid x:Name="WhGrid" Height="120" MouseDoubleClick="OpenReceipt_Click">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="رقم أمر التسليم" Binding="{Binding رقم_أمر_التسليم}" Width="130"/>
+                                            <DataGridTextColumn Header="أمر الإنتاج" Binding="{Binding أمر_الإنتاج}" Width="120"/>
+                                            <DataGridTextColumn Header="التاريخ" Binding="{Binding تاريخ_التسليم}" Width="100"/>
+                                            <DataGridTextColumn Header="الإجمالي" Binding="{Binding الإجمالي}" Width="100"/>
+                                            <DataGridTextColumn Header="المستلم سابقاً" Binding="{Binding المستلم_سابقاً}" Width="110"/>
+                                            <DataGridTextColumn Header="المتبقي (كجم)" Binding="{Binding المتبقي}" Width="100"/>
+                                            <DataGridTextColumn Header="الحالة" Binding="{Binding الحالة}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- منطقة الإدارات -->
+                    <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="12" Margin="0,10,0,0">
+                        <StackPanel x:Name="DeptArea"/>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>

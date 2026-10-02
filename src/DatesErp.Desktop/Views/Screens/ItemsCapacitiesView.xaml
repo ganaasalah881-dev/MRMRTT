@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.ItemsCapacitiesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <!-- §B73: شاشة طاقات الأصناف — المصدر المعتمد لطاقة الصنف في التخطيط.
+         الأصناف تُجلب تلقائياً من شاشة الأصناف (بالمعرّف)، والورديات من شاشة الورديات (ديناميكياً).
+         المستخدم يعدّل «الإنتاج بالساعة» فقط؛ كل طاقة وردية وطاقة اليوم محسوبة: المعدل × الساعات الفعلية. -->
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+            <StackPanel>
+                <TextBlock Text="⚡ طاقات الأصناف — الإنتاج بالساعة يُدخل يدوياً لكل صنف بوحدته، وطاقة كل وردية = المعدل × ساعاتها الفعلية (إجمالي − التوقف المخطط)، وطاقة اليوم = مجموع الورديات" FontSize="12" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8" TextWrapping="Wrap"/>
+                <WrapPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <Button Content="➕ إضافة" Style="{StaticResource ErpPrimaryButton}" Click="Add_Click" Margin="0,0,6,0" ToolTip="الأصناف تُجلب تلقائياً من شاشة الأصناف — هذا الزر يعيد الجلب"/>
+                        <Button Content="💾 حفظ" Style="{StaticResource ErpPrimaryButton}" Click="Save_Click" Margin="0,0,6,0"/>
+                        <Button Content="✏️ تعديل" Style="{StaticResource ErpButton}" Click="Edit_Click" Margin="0,0,6,0" ToolTip="خلية «الإنتاج بالساعة» قابلة للتحرير مباشرة"/>
+                        <Button Content="🔍 بحث" Style="{StaticResource ErpButton}" Click="Search_Click" Margin="0,0,6,0"/>
+                        <Button Content="🗑️ حذف" Style="{StaticResource ErpDangerButton}" Click="Delete_Click" Margin="0,0,6,0" ToolTip="يزيل الإنتاج بالساعة للصنف المحدد"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Bottom">
+                        <TextBlock Text="🔎 بحث بالصنف:" FontWeight="Bold" FontSize="11.5" Foreground="#1F2937" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="SearchBox" Width="240" TextChanged="Search_Changed" VerticalAlignment="Center"/>
+                        <Button Content="عرض الكل" Style="{StaticResource ErpButton}" Click="ShowAll_Click" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </WrapPanel>
+                <TextBlock FontSize="12" Foreground="#6B7280" TextWrapping="Wrap" Margin="0,8,0,0"
+                    Text="لا تُحفَظ طاقة الوردية كرقم يدوي أبداً — أضف وردية أو غيّر ساعاتها من شاشة الورديات وستظهر هنا وتدخل الحساب فوراً."/>
+            </StackPanel>
+        </Border>
+        <DataGrid x:Name="CapsGrid" RowHeight="30" FontSize="13" ColumnHeaderHeight="40"/>
+    </DockPanel>
+</UserControl>

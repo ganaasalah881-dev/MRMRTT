@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <!-- Audit direct AND transitive dependencies, including test/audit projects.
+         Real advisories (NU1901-NU1904) remain fail-closed.
+         NU1900 = "audit feed unavailable" (offline/air-gapped build machine):
+         it must NOT break packaging — degrade to a warning so a build that
+         otherwise succeeds can still ship; CI online restores the audit. -->
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <WarningsAsErrors>$(WarningsAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsAsErrors>
+  </PropertyGroup>
+</Project>

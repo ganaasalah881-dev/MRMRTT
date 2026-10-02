@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.ProductionAuxiliaryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+            <StackPanel>
+                <TextBlock Text="🧪 صرف الأصناف المساعدة للإنتاج" FontSize="22" FontWeight="Bold" Foreground="{StaticResource DarkTitleBrush}"/>
+                <TextBlock Text="عند إصدار أمر الإنتاج يظهر قسم مواد الإنتاج المطلوبة — المطلوب | المصروف | المتبقي | المتاح | صرف — مع تتبع كامل." 
+                           TextWrapping="Wrap" Foreground="{StaticResource MutedTextBrush}" FontSize="13" Margin="0,4,0,0"/>
+                <TextBlock Text="التسلسل: خطة الإنتاج → أمر الإنتاج → احتياجات الأصناف المساعدة → صرف للإنتاج → تنفيذ → إغلاق. الخام من الشحنة/الدفعة، المساعد من مخزون WAUX مستقل."
+                           TextWrapping="Wrap" Foreground="{StaticResource LightMutedBrush}" FontSize="11" Margin="0,6,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+            <StackPanel>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="أمر الإنتاج *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="OrderBox" Width="300" DisplayMemberPath="DocumentNumber" SelectedValuePath="Id" SelectionChanged="Order_Changed"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0" VerticalAlignment="Bottom">
+                        <TextBlock x:Name="OrderInfo" Text="—" Foreground="{StaticResource PrimaryBrush}" FontWeight="Bold" FontSize="12"/>
+                    </StackPanel>
+                    <Button Content="📤 صرف كل المتبقي" Style="{StaticResource ErpApproveButton}" Click="IssueAll_Click" VerticalAlignment="Bottom" Margin="0,0,8,0" ToolTip="صرف جميع الأصناف المساعدة المتبقية دفعة واحدة مع التحقق من المخزون"/>
+                    <Button Content="↩ إرجاع فائض" Style="{StaticResource ErpButton}" Click="Return_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                    <Button Content="🔄 تحديث" Style="{StaticResource ErpButton}" Click="Refresh_Click" VerticalAlignment="Bottom"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <!-- جدول الاحتياجات -->
+            <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,6">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="مواد الإنتاج المطلوبة — المطلوب | المصروف | المتبقي | المتاح | حالة المخزون | صرف" 
+                               FontWeight="Bold" FontSize="13" Margin="0,0,0,6"/>
+                    <DataGrid x:Name="NeedsGrid" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" RowHeight="36" MinHeight="200">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="White"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding StockStatus}" Value="غير متوفر">
+                                        <Setter Property="Background" Value="{StaticResource InvalidRowBrush}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding StockStatus}" Value="جزئي">
+                                        <Setter Property="Background" Value="{StaticResource AuxWarningLightBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="الصنف المساعد" Binding="{Binding AuxiliaryProductName}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الوحدة" Binding="{Binding Unit}" Width="70" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="المطلوب" Binding="{Binding RequiredQty, StringFormat=N3}" Width="100" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="المصروف" Binding="{Binding IssuedQty, StringFormat=N3}" Width="100" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="المتبقي المطلوب" Binding="{Binding RemainingQty, StringFormat=N3}" Width="120" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="المتاح" Binding="{Binding AvailableQty, StringFormat=N3}" Width="100" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="حالة المخزون" Binding="{Binding StockStatusAr}" Width="90" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="التفاصيل" Binding="{Binding CalculationDetails}" Width="200" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Header="صرف" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="📤 صرف" Style="{StaticResource ErpPrimaryButton}" Click="IssueOne_Click" Tag="{Binding}" IsEnabled="{Binding NeedsIssue}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="تفاصيل" Width="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="🔍" Style="{StaticResource ErpButton}" Click="Details_Click" Tag="{Binding}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Grid.Row="1" Height="6" HorizontalAlignment="Stretch" Background="{StaticResource ErpLineBrush}"/>
+
+            <!-- سجل الصرف والتتبع -->
+            <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,6,0,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="سجل الصرف — تتبع كامل: رقم الأمر، الصنف المساعد، المطلوب، المصروف، الوحدة، التاريخ، المستخدم، رقم المستند، المستودع، الرصيد قبل/بعد" 
+                               FontWeight="Bold" FontSize="12" Margin="0,0,0,6" TextWrapping="Wrap"/>
+                    <DataGrid x:Name="HistoryGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" RowHeight="30" MinHeight="120">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="التاريخ" Binding="{Binding IssueDate, StringFormat=dd/MM/yyyy HH:mm}" Width="130"/>
+                            <DataGridTextColumn Header="المستند" Binding="{Binding DocumentNumber}" Width="180"/>
+                            <DataGridTextColumn Header="الصنف المساعد" Binding="{Binding AuxiliaryProductName}" Width="*"/>
+                            <DataGridTextColumn Header="المطلوب" Binding="{Binding RequiredQty, StringFormat=N3}" Width="90"/>
+                            <DataGridTextColumn Header="المصروف" Binding="{Binding IssuedQty, StringFormat=N3}" Width="90"/>
+                            <DataGridTextColumn Header="الوحدة" Binding="{Binding Unit}" Width="60"/>
+                            <DataGridTextColumn Header="المستخدم" Binding="{Binding UserName}" Width="100"/>
+                            <DataGridTextColumn Header="المستودع" Binding="{Binding WarehouseId}" Width="70"/>
+                            <DataGridTextColumn Header="قبل" Binding="{Binding BalanceBefore, StringFormat=N3}" Width="80"/>
+                            <DataGridTextColumn Header="بعد" Binding="{Binding BalanceAfter, StringFormat=N3}" Width="80"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net8.0</TargetFramework><OutputType>Exe</OutputType><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><NoWarn>$(NoWarn);CS8618;CS8625;CS8601;CS8603;CS8602;CS8600;CS8629;CS8604;CS8632;CS8714;CS8765</NoWarn></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/DatesErp.Application/DatesErp.Application.csproj"/>
+    <ProjectReference Include="../../src/DatesErp.Infrastructure/DatesErp.Infrastructure.csproj"/>
+    <Compile Include="../../src/DatesErp.Desktop/Mvvm/ActualProductionRows.cs" Link="ActualProductionRows.cs"/>
+    <Compile Include="../../src/DatesErp.Desktop/Mvvm/PlanningRows.cs" Link="PlanningRows.cs"/>
+    <Compile Include="../../tests/DatesErp.Tests/TestHost.cs" Link="TestHost.cs"/>
+  </ItemGroup>
+</Project>

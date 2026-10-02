@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.ItemsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <!-- §B72: شاشة الأصناف المعاد تصميمها من الصفر.
+         خام (001): رقم المجموعة · رقم الصنف (آلي) · الاسم · الوحدة فقط.
+         تام (002): يُضاف عدد القوالب · وزن القالب · وزن الكرتون (آلي) · الصنف الخام.
+         الأزرار الخمسة الإلزامية: إضافة حفظ تعديل بحث حذف. -->
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+            <StackPanel>
+                <TextBlock Text="🏷️ الأصناف — الخام يبدأ بالمجموعة 001، والتام 002 ويُضاف له القوالب والصنف الخام" FontSize="12" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8"/>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="المجموعة *:" Style="{StaticResource FieldLabel}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="GroupBox" Width="220" SelectionChanged="Group_Changed"/>
+                            <Button x:Name="ManageGroupsBtn" Content="⚙️ إدارة المجموعات والفئات" Style="{StaticResource ErpButton}" Margin="6,0,0,0"
+                                    Click="ManageGroups_Click" ToolTip="إضافة وتعديل مجموعات الأصناف وفئاتها (وإعادة تفعيل مجموعة موقوفة)"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="رقم الصنف (يُولَّد تلقائياً عند الحفظ):" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="CodeBox" Width="130" IsReadOnly="True" Background="#F1F5F9" FontWeight="Bold" Foreground="#1F2937"
+                                 ToolTip="§47 — لا يظهر رقم مسبق عند «جديد»: يُولَّد الرقم في الخادم لحظة الحفظ حتى لا يتعارض مستخدمان يعملان معاً"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="اسم الصنف *:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="NameBox" Width="230"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="الوحدة * (تُقرأ من الوحدات):" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="UnitBox" Width="140"/>
+                    </StackPanel>
+                    <!-- §B109 — علم «يحتاج معالجة»: هذا هو المكان الوحيد الذي يضبطه.
+                         شاشة الاستلام تقرأه ولا تحرره، فبدون هذا الصندوق كان العمود
+                         هناك يعرض «لا» دائماً بلا أي طريقة لجعله «نعم». -->
+                    <StackPanel Margin="0,0,14,0" VerticalAlignment="Bottom">
+                        <TextBlock Text="المعالجة والتعقيم:" Style="{StaticResource FieldLabel}"/>
+
+                    </StackPanel>
+                </WrapPanel>
+                <!-- إضافيات مجموعة التام فقط -->
+                <WrapPanel x:Name="FinishedFields" Margin="0,8,0,0" Visibility="Collapsed">
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="عدد القوالب:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="MoldsBox" Width="90" Text="" TextChanged="MoldInputs_Changed"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="وزن القالب (كجم):" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="MoldWBox" Width="110" Text="" TextChanged="MoldInputs_Changed"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="وزن الكرتون (كجم — يظهر آلياً):" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="CartonWBox" Width="130" IsReadOnly="True" Background="#F1F5F9" FontWeight="Bold" Foreground="#14532D"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="الصنف الخام المصدر (مثال: سكري تام ← سكري خام):" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="SourceBox" Width="240"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="معامل الإنتاجية (خارج÷داخل — مثال 1.05):" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="YieldBox" Width="110" Text=""/>
+                    </StackPanel>
+                </WrapPanel>
+                <WrapPanel Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <Button Content="➕ إضافة" Style="{StaticResource ErpPrimaryButton}" Click="Add_Click" Margin="0,0,6,0"/>
+                        <Button Content="💾 حفظ" Style="{StaticResource ErpPrimaryButton}" Click="Save_Click" Margin="0,0,6,0"/>
+                        <Button Content="✏️ تعديل" Style="{StaticResource ErpButton}" Click="Edit_Click" Margin="0,0,6,0"/>
+                        <Button Content="🔍 بحث" Style="{StaticResource ErpButton}" Click="Search_Click" Margin="0,0,6,0"/>
+                        <Button Content="🗑️ حذف" Style="{StaticResource ErpDangerButton}" Click="Delete_Click" Margin="0,0,6,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Bottom">
+                        <TextBlock Text="🔎 بحث بالرقم/الاسم:" FontWeight="Bold" FontSize="11.5" Foreground="#1F2937" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="SearchBox" Width="260" TextChanged="Search_Changed" VerticalAlignment="Center"/>
+                        <Button Content="عرض الكل" Style="{StaticResource ErpButton}" Click="ShowAll_Click" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+        <DataGrid x:Name="ItemsGrid" RowHeight="30" AutoGenerateColumns="False" MouseDoubleClick="ItemsGrid_DoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="رقم الصنف" Binding="{Binding Code}" Width="110" IsReadOnly="True"/>
+                <DataGridTextColumn Header="اسم الصنف" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="المجموعة" Binding="{Binding Group}" Width="90" IsReadOnly="True"/>
+                <DataGridTextColumn Header="الوحدة" Binding="{Binding Unit}" Width="80" IsReadOnly="True"/>
+                <DataGridTextColumn Header="يحتاج معالجة" Binding="{Binding Treat}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="وزن الكرتون" Binding="{Binding CartonW}" Width="90" IsReadOnly="True"/>
+                <DataGridTextColumn Header="الصنف الخام" Binding="{Binding Source}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="الحالة" Binding="{Binding Status}" Width="90" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,707 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         هوية Date ERP البصرية (Onyx Classic — إصدار راقي):
+         كحلي عميق #0A246A | ذهبي #C9A227 | أخضر نخيلي #14532D | بيج دافئ #F1F5F9
+         مستطيلات بإطار خارجي واضح، أزرار موحدة المسافات بلا تداخل،
+         قوائم وجداول واسعة لا تخرج بياناتها عن النطاق.
+         ═══════════════════════════════════════════════════════════════ -->
+    <!-- موارد الثيم الديناميكية: ThemeManager يحدّثها لحظياً لكل النوافذ الحالية والجديدة. -->
+    <Color x:Key="ThemePrimaryColor">#14532D</Color>
+    <Color x:Key="ThemeSecondaryColor">#C9A227</Color>
+    <Color x:Key="ThemeBackgroundColor">#F1F5F9</Color>
+    <Color x:Key="ThemeWindowBackgroundColor">#F1F5F9</Color>
+    <Color x:Key="ThemeTableBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="ThemeTableHeaderColor">#0A246A</Color>
+    <Color x:Key="ThemeTextColor">#1E293B</Color>
+    <Color x:Key="ThemeSecondaryTextColor">#64748B</Color>
+    <Color x:Key="ThemeButtonColor">#0A246A</Color>
+    <Color x:Key="ThemeButtonHoverColor">#2158B8</Color>
+    <Color x:Key="ThemeButtonPressedColor">#061845</Color>
+    <Color x:Key="ThemeBorderColor">#94A3B8</Color>
+    <Color x:Key="ThemeSuccessColor">#15803D</Color>
+    <Color x:Key="ThemeWarningColor">#B45309</Color>
+    <Color x:Key="ThemeErrorColor">#B91C1C</Color>
+    <Color x:Key="ThemeInfoColor">#0284C7</Color>
+    <Color x:Key="ThemeSelectedRowColor">#FEF3C7</Color>
+    <Color x:Key="ThemeHoverRowColor">#E8EEF7</Color>
+    <Color x:Key="ThemeAlternateRowColor">#F8FAFC</Color>
+    <Color x:Key="ThemeCardBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="ThemeInputBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="ThemeTitleBarColor">#0A246A</Color>
+    <SolidColorBrush x:Key="ThemeButtonTextColor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ThemeButtonTextBrush" Color="#FFFFFF"/>
+    <!-- خطوط الجداول والحقول تُحسب مقابل خلفيتها في ThemeManager لتبقى واضحة في الفاتح والداكن. -->
+    <SolidColorBrush x:Key="ThemeGridLineBrush" Color="#64748B"/>
+    <SolidColorBrush x:Key="ThemeInputBorderBrush" Color="#64748B"/>
+    <SolidColorBrush x:Key="ThemeFocusBorderBrush" Color="#0A246A"/>
+    <SolidColorBrush x:Key="ThemeHeaderRuleBrush" Color="#94A3B8"/>
+    <SolidColorBrush x:Key="ThemeHeaderForegroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ThemeInputForegroundBrush" Color="#1E293B"/>
+    <SolidColorBrush x:Key="ThemeStatusTextBrush" Color="#F8FAFC"/>
+    <FontFamily x:Key="ThemeBodyFontFamily">Segoe UI</FontFamily>
+    <FontFamily x:Key="ThemeHeadingFontFamily">Segoe UI</FontFamily>
+    <system:Double x:Key="ThemeBaseFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">13</system:Double>
+    <system:Double x:Key="ThemeTableFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">13</system:Double>
+    <system:Double x:Key="ThemeButtonFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">13</system:Double>
+    <system:Double x:Key="ThemePageTitleFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">18</system:Double>
+    <system:Double x:Key="ThemeSectionTitleFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">15</system:Double>
+    <system:Double x:Key="ThemeRowHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">32</system:Double>
+    <system:Double x:Key="ThemeTitleBarHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">34</system:Double>
+    <system:Double x:Key="ThemeTableHeaderHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">32</system:Double>
+    <system:Double x:Key="ThemeButtonHeight" xmlns:system="clr-namespace:System;assembly=mscorlib">36</system:Double>
+    <Thickness x:Key="ThemeInputBorderThickness">1</Thickness>
+    <Thickness x:Key="ThemeButtonBorderThickness">1</Thickness>
+    <Thickness x:Key="ThemeTableBorderThickness">1</Thickness>
+    <Thickness x:Key="ThemeColumnDividerThickness">0,0,1,1</Thickness>
+    <Thickness x:Key="ThemeInputPadding">6,4</Thickness>
+    <Thickness x:Key="ThemeButtonPadding">14,6</Thickness>
+    <CornerRadius x:Key="ThemeCornerRadius">6</CornerRadius>
+    <CornerRadius x:Key="ThemeButtonCornerRadius">6</CornerRadius>
+
+    <Color x:Key="PrimaryColor">#14532D</Color>
+    <Color x:Key="PrimaryDarkColor">#0B3D1F</Color>
+    <Color x:Key="AccentColor">#C9A227</Color>
+    <Color x:Key="LightBgColor">#F1F5F9</Color>
+    <Color x:Key="BorderColor">#94A3B8</Color>
+    <Color x:Key="DangerColor">#DC2626</Color>
+    <Color x:Key="SuccessColor">#16A34A</Color>
+    <Color x:Key="NavyColor">#0A246A</Color>
+    <!-- §44 ألوان دلالية موحّدة للاتساق: سطح/حبر/صامت/سطر/نجاح/تحذير/خطر -->
+    <Color x:Key="ErpSurfaceColor">#F8FAFC</Color>
+    <Color x:Key="ErpInkColor">#1E293B</Color>
+    <Color x:Key="ErpMutedColor">#64748B</Color>
+    <Color x:Key="ErpLineColor">#CBD5E1</Color>
+    <Color x:Key="ErpOkColor">#15803D</Color>
+    <Color x:Key="ErpWarnColor">#B45309</Color>
+    <Color x:Key="ErpDangerColor">#B91C1C</Color>
+    <Color x:Key="InvalidRowColor">#FECACA</Color>
+    <Color x:Key="AuxWarningLightColor">#FEF9C7</Color>
+    <Color x:Key="DarkTitleColor">#123544</Color>
+    <Color x:Key="MutedTextColor">#526474</Color>
+    <Color x:Key="LightMutedColor">#6B7280</Color>
+    <SolidColorBrush x:Key="ErpSurfaceBrush" Color="{StaticResource ErpSurfaceColor}"/>
+    <SolidColorBrush x:Key="ErpInkBrush" Color="{StaticResource ErpInkColor}"/>
+    <SolidColorBrush x:Key="ErpMutedBrush" Color="{StaticResource ErpMutedColor}"/>
+    <SolidColorBrush x:Key="ErpLineBrush" Color="{StaticResource ErpLineColor}"/>
+    <SolidColorBrush x:Key="ErpOkBrush" Color="{StaticResource ErpOkColor}"/>
+    <SolidColorBrush x:Key="ErpWarnBrush" Color="{StaticResource ErpWarnColor}"/>
+    <SolidColorBrush x:Key="ErpDangerBrush" Color="{StaticResource ErpDangerColor}"/>
+    <SolidColorBrush x:Key="InvalidRowBrush" Color="{StaticResource InvalidRowColor}"/>
+    <SolidColorBrush x:Key="AuxWarningLightBrush" Color="{StaticResource AuxWarningLightColor}"/>
+    <SolidColorBrush x:Key="DarkTitleBrush" Color="{StaticResource DarkTitleColor}"/>
+    <SolidColorBrush x:Key="MutedTextBrush" Color="{StaticResource MutedTextColor}"/>
+    <SolidColorBrush x:Key="LightMutedBrush" Color="{StaticResource LightMutedColor}"/>
+    <!-- §46 — أزرق معلوماتي (مؤشرات الجودة/المراحل) ضمن هوية التقارير المطوّرة -->
+    <Color x:Key="ErpInfoColor">#0284C7</Color>
+    <SolidColorBrush x:Key="ErpInfoBrush" Color="{StaticResource ErpInfoColor}"/>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDarkColor}"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+    <SolidColorBrush x:Key="LightBgBrush" Color="{StaticResource LightBgColor}"/>
+    <SolidColorBrush x:Key="BorderBrushStd" Color="{StaticResource BorderColor}"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="NavyBrush" Color="{StaticResource NavyColor}"/>
+    <SolidColorBrush x:Key="GrayTextBrush" Color="#5F6368"/>
+
+    <!-- §معيار الواجهات الموحد: خط رسمي واحد لجميع العناصر (عناوين/حقول/أزرار/جداول/رسائل) -->
+    <FontFamily x:Key="HeadFont">Segoe UI, Tahoma, Arial</FontFamily>
+    <FontFamily x:Key="BodyFont">Segoe UI, Tahoma, Arial</FontFamily>
+    <system:Double x:Key="UiFontSize" xmlns:system="clr-namespace:System;assembly=mscorlib">12</system:Double>
+
+    <!-- ═══ النوافذ: خلفية موحدة وخط موحد (إطار بصري واحد لكل النظام) ═══ -->
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{DynamicResource ThemeWindowBackgroundBrush}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeBaseFontSize}"/>
+        <!-- §48 — رسم نص أوضح (Display) حتى لا تضيع الكتابة على الشاشات العادية -->
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+    </Style>
+
+    <!-- ═══ §19/§20 — معيار الجداول الموحد: حدود واضحة، خطوط فصل، رؤوس واضحة،
+         ارتفاع صف مناسب، تمييز الصف المحدد، تمرير عند كثرة البيانات ═══ -->
+    <Style TargetType="DataGrid">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource ThemeBodyWeight}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeTableBackgroundBrush}"/>
+        <Setter Property="RowBackground" Value="{DynamicResource ThemeTableBackgroundBrush}"/>
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource ThemeAlternateRowBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeTableBorderThickness}"/>
+        <Setter Property="GridLinesVisibility" Value="All"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="RowHeight" Value="{DynamicResource ThemeRowHeight}"/>
+        <Setter Property="ColumnHeaderHeight" Value="{DynamicResource ThemeTableHeaderHeight}"/>
+        <Setter Property="CanUserResizeRows" Value="False"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="AlternationCount" Value="2"/>
+        <Setter Property="ColumnHeaderStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="{DynamicResource ThemeTableHeaderBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ThemeHeaderForegroundBrush}"/>
+                    <Setter Property="FontWeight" Value="{DynamicResource ThemeHeadingWeight}"/>
+                    <Setter Property="FontFamily" Value="{DynamicResource ThemeHeadingFontFamily}"/>
+                    <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+                    <Setter Property="Padding" Value="8,5"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ThemeHeaderRuleBrush}"/>
+                    <Setter Property="BorderThickness" Value="{DynamicResource ThemeColumnDividerThickness}"/>
+                    <Setter Property="HorizontalContentAlignment" Value="{DynamicResource ThemeTextAlignment}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CellStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="6,3"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridCell">
+                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ThemeSelectedRowBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RowStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <Trigger Property="AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="{DynamicResource ThemeAlternateRowBrush}"/>
+                        </Trigger>
+                        <!-- §B89: إبراز الصف تحت المؤشر — قبل المحدد حتى لا يغلبه -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ThemeHoverRowBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ThemeSelectedRowBrush}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══ §23 — معيار الحقول الموحد: مساحة مناسبة لا تخفي المحتوى ═══ -->
+    <Style TargetType="TextBox">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeBaseFontSize}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource ThemeBodyWeight}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeInputForegroundBrush}"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="Padding" Value="{DynamicResource ThemeInputPadding}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeInputBorderThickness}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeInputBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeInputBackgroundBrush}"/>
+        <!-- §B89: إطار التركيز — الحقل النشط يُعرف فوراً بإطار كحلي -->
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="True">
+                        <TextBlock DockPanel.Dock="Right" Foreground="{DynamicResource ThemeErrorBrush}" FontWeight="Bold" FontSize="12" Margin="4,0,0,0" Text="⚠"
+                                   ToolTip="{Binding ElementName=adorner, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"/>
+                        <Border BorderBrush="{DynamicResource ThemeErrorBrush}" BorderThickness="1.5" CornerRadius="{DynamicResource ThemeCornerRadius}">
+                            <AdornedElementPlaceholder x:Name="adorner"/>
+                        </Border>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ThemeFocusBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="{DynamicResource ThemeInputBorderThickness}"/>
+            </Trigger>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ThemeSecondaryTextBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!-- §B90 — حواف الحقول الموحدة (التسطير المهني): كل حقل إدخال بإطار #94A3B8 وإطار تركيز كحلي -->
+    <Style TargetType="ComboBox">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeBaseFontSize}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource ThemeBodyWeight}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeInputForegroundBrush}"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeInputBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeInputBorderThickness}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeInputBackgroundBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource ThemeFocusBorderBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="DatePicker">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeBaseFontSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeInputForegroundBrush}"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeInputBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeInputBorderThickness}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeInputBackgroundBrush}"/>
+    </Style>
+    <Style TargetType="PasswordBox">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeBaseFontSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeInputForegroundBrush}"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="Padding" Value="5,4"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeInputBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeInputBorderThickness}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeInputBackgroundBrush}"/>
+    </Style>
+    <Style TargetType="CheckBox">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+    <Style TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+    </Style>
+
+    <!-- §B90 — القوائم: إطار موحد + عنصر محدد كحلي واضح (خصائص ومحفزات فقط — بلا قوالب، آمن للافتراضي) -->
+    <Style TargetType="ListBox">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeTableBorderThickness}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeTableBackgroundBrush}"/>
+    </Style>
+    <Style TargetType="ListBoxItem">
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="Padding" Value="6,5"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ThemeHoverRowBrush}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ThemeTableHeaderBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource ThemeButtonTextBrush}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ═══ §B82 — أزرار واضحة مشبعة: كل نوع يُعرف من لونه فوراً ═══
+         محايد = أبيض دافئ بإطار واضح | رئيسي = كحلي مصمت | اعتماد = أخضر مصمت | خطر = أحمر مصمت
+         نص أبيض على المصمتة — انتهى عهد الباستيل الباهت المتشابه. المعطَّل رمادي صريح. -->
+
+    <!-- الزر المحايد (إجراءات ثانوية): أبيض دافئ بإطار مقروء وحدود واضحة عند المرور -->
+    <Style x:Key="ErpButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource ThemeAlternateRowBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeButtonFontSize}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Padding" Value="{DynamicResource ThemeButtonPadding}"/>
+        <Setter Property="Margin" Value="3,2"/>
+        <Setter Property="MinHeight" Value="{DynamicResource ThemeButtonHeight}"/>
+        <Setter Property="Height" Value="{DynamicResource ThemeButtonHeight}"/>
+        <Setter Property="Width" Value="{DynamicResource ThemeButtonWidth}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeButtonBorderThickness}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ThemeButtonCornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="{DynamicResource ThemeTableBackgroundColor}" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ThemeBackgroundColor}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeSecondaryBrush}"/>
+                            <Setter TargetName="bd" Property="BorderThickness" Value="1.6"/>
+                            <Setter TargetName="bd" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="{DynamicResource ThemeTableBackgroundColor}" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource ThemeTableBackgroundColor}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeBorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <!-- النص يبقى مقروءاً عند تعطيل الزر؛ لون الحد كان يطابق الخلفية فيختفي -->
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeSecondaryTextBrush}"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- الزر الرئيسي (حفظ/بحث/إنشاء): كحلي مصمت بنص أبيض — أعلى hierarchie بصرية -->
+    <Style x:Key="ErpPrimaryButton" TargetType="Button" BasedOn="{StaticResource ErpButton}">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeButtonTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeButtonPressedBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ThemeButtonCornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="{DynamicResource ThemeButtonHoverColor}" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ThemeButtonColor}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeSecondaryBrush}"/>
+                            <Setter TargetName="bd" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="{DynamicResource ThemeButtonHoverColor}" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource ThemeButtonColor}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeButtonPressedBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <!-- النص يبقى مقروءاً عند تعطيل الزر؛ لون الحد كان يطابق الخلفية فيختفي -->
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeSecondaryTextBrush}"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- زر الاعتماد/التأكيد: أخضر مصمت بنص أبيض -->
+    <Style x:Key="ErpApproveButton" TargetType="Button" BasedOn="{StaticResource ErpButton}">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeButtonTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemePrimaryBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ThemeButtonCornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="{DynamicResource ThemePrimaryColor}" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ThemeSuccessColor}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeSecondaryBrush}"/>
+                            <Setter TargetName="bd" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="{DynamicResource ThemeSuccessColor}" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource ThemePrimaryColor}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemePrimaryBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <!-- النص يبقى مقروءاً عند تعطيل الزر؛ لون الحد كان يطابق الخلفية فيختفي -->
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeSecondaryTextBrush}"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- زر الخطر (حذف/إلغاء): أحمر مصمت بنص أبيض — كان بيجاً باهتاً بنص أحمر -->
+    <Style x:Key="ErpDangerButton" TargetType="Button" BasedOn="{StaticResource ErpButton}">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeButtonTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeButtonPressedBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{DynamicResource ThemeButtonCornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="{DynamicResource ThemeErrorColor}" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ThemeErrorColor}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="#FCA5A5"/>
+                            <Setter TargetName="bd" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="{DynamicResource ThemeErrorColor}" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource ThemeErrorColor}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeButtonPressedBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+                            <!-- النص يبقى مقروءاً عند تعطيل الزر؛ لون الحد كان يطابق الخلفية فيختفي -->
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeSecondaryTextBrush}"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- §B110 — توحيد الأزرار: الأسماء المختصرة تطابق الدور الحقيقي أخيراً —
+         رئيسي=كحلي | ثانوي=محايد | خطر=أحمر. (أُزيل الاسم الميّت AccentButton بلا أي استخدام)
+         المعيار: حفظ/إنشاء/إضافة/جديد/تشغيل/فتح/متابعة = كحلي | اعتماد/إصدار/استلام/إقفال = أخضر |
+         حذف/إلغاء/فك اعتماد = أحمر | الباقي = محايد. الأحجام من القالب (11.5 عريض، 28 أدنى ارتفاع)
+         ولا تجاوزات مضمّنة إلا المدمجة عمداً (✕ الصفوف وأزرار الشريط). -->
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ErpPrimaryButton}"/>
+    <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ErpButton}"/>
+    <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ErpDangerButton}"/>
+
+    <!-- §B110 — زر شريط العنوان (تصغير/تكبير): مسطّح شفاف بحرف أبيض على الكحلي،
+         كان يستخدم ErpButton (ارتفاع أدنى 28 وحشوة 12) فيكسر الشريط النحيف -->
+    <Style x:Key="ErpChromeButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeButtonTextBrush}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Width" Value="34"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="1,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeButtonHoverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeButtonPressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- §B110 — زر إغلاق شريط العنوان: مثل أخويه لكن التمرير أحمر (العرف المهني) -->
+    <Style x:Key="ErpChromeCloseButton" TargetType="Button" BasedOn="{StaticResource ErpChromeButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeErrorBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource ThemeButtonPressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FieldLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource ThemeHeadingWeight}"/>
+        <Setter Property="Margin" Value="0,6,0,2"/>
+    </Style>
+    <Style x:Key="SectionTitle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{DynamicResource ThemeSectionTitleFontSize}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeHeadingFontFamily}"/>
+        <Setter Property="FontWeight" Value="{DynamicResource ThemeHeadingWeight}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeTableHeaderBrush}"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <!-- §رأس أعمدة التقارير: خط أكبر وواضح — التقرير يُقرأ مطبوعاً وعلى الشاشة -->
+    <!-- §46 — ترويسة جداول التقارير: كحلية بنص أبيض كهوية القوالب المرجعية المعتمدة -->
+    <Style x:Key="ReportHeaderStyle" TargetType="DataGridColumnHeader">
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeHeadingFontFamily}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeHeaderForegroundBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeTableHeaderBrush}"/>
+        <Setter Property="Padding" Value="8,8"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeHeaderRuleBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,1,2"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!-- رأس قسم: خلفية فاتحة أنيقة مع خط ذهبي سفلي (هوية موحدة + بقاء النصوص مقروءة) -->
+    <Style x:Key="SecHeader" TargetType="Border">
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeSecondaryBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{DynamicResource ThemeAlternateRowColor}" Offset="0"/>
+                    <GradientStop Color="{DynamicResource ThemeBackgroundColor}" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══ البطاقات: مستطيل خارجي واضح + ظل خفيف (لا تداخل ولا خروج عن النطاق) ═══ -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource ThemeTableBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeTableBorderThickness}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource ThemeCornerRadius}"/>
+        <Setter Property="Padding" Value="{DynamicResource ThemeCardPadding}"/>
+        <Setter Property="Effect" Value="{DynamicResource ThemeCardEffect}"/>
+    </Style>
+    <Style x:Key="WhiteCard" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource ThemeCardBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeGridLineBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeTableBorderThickness}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource ThemeCornerRadius}"/>
+        <Setter Property="Padding" Value="{DynamicResource ThemeCardPadding}"/>
+        <Setter Property="Effect" Value="{DynamicResource ThemeCardEffect}"/>
+    </Style>
+
+    <!-- ═══ عنصر القائمة الجانبية (كحلي داكن — المعتمد) ═══ -->
+    <Style x:Key="NavItem" TargetType="ListBoxItem">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeBorderBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeBaseFontSize}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="bd" Background="Transparent" Padding="{TemplateBinding Padding}" Margin="0,1" CornerRadius="{DynamicResource ThemeCornerRadius}">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="#14FFFFFF"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeButtonTextBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="#40CA8A04"/>
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource ThemeSecondaryBrush}"/>
+                            <Setter TargetName="bd" Property="BorderThickness" Value="1.5"/>
+                            <Setter Property="Foreground" Value="#FEF08A"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeHeaderForegroundBrush}"/>
+        <Setter Property="Padding" Value="8,6"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeHeadingFontFamily}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeHeaderRuleBrush}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource ThemeColumnDividerThickness}"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="{DynamicResource ThemeTableHeaderColor}" Offset="0"/>
+                    <GradientStop Color="{DynamicResource ThemeButtonHoverColor}" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══ شريط الحالة ═══ -->
+    <Style x:Key="StatusText" TargetType="TextBlock">
+        <!-- شريط الحالة ثابت داكن حتى في الثيم الفاتح؛ نصه لا يرث حبر الصفحة. -->
+        <Setter Property="Foreground" Value="{DynamicResource ThemeStatusTextBrush}"/>
+        <Setter Property="FontSize" Value="{DynamicResource ThemeTableFontSize}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource ThemeBodyFontFamily}"/>
+        <Setter Property="Margin" Value="12,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- شارة حالة الوثيقة -->
+    <Style x:Key="StatusBadge" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Padding" Value="6,1"/>
+    </Style>
+
+</ResourceDictionary>

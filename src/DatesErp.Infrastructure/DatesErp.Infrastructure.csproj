@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\DatesErp.Core\DatesErp.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.24" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.24" />
+    <!-- Pin the complete SQLite bundle: old EF transitive minimum ships vulnerable native SQLite. -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
+    <!-- win-x64 RID graph: runtime.any.System.Runtime otherwise resolves vulnerable System.Private.Uri 4.3.0. -->
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- §دين تقني مُقرّ به: تفعيل Nullable على كود قديم يُنتج هذا الضجيج.
+         الكبت موثّق ومقصود — خفّض هذه القائمة تدريجياً كلما نُظّف كل ملف.
+         لا تُضف تحذيرات جديدة إلى هذه القائمة. -->
+    <NoWarn>$(NoWarn);CS8618;CS8625;CS8601;CS8603;CS8602;CS8600;CS8629;CS8604;CS8632;CS8714;CS8765;CS8619;CS8620</NoWarn>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.AuditFilterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <DockPanel Background="#F1F5F9">
+        <!-- شريط الفلاتر -->
+        <Border DockPanel.Dock="Top" Background="White" BorderBrush="#94A3B8" BorderThickness="0,0,0,1" Padding="10,8">
+            <WrapPanel>
+                <TextBlock Text="المستخدم:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <ComboBox x:Name="FUser" Width="130" FontSize="11.5" Margin="0,0,12,0" VerticalAlignment="Center">
+                    <ComboBoxItem Content="— الكل —" IsSelected="True"/>
+                </ComboBox>
+                <TextBlock Text="الإجراء:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <ComboBox x:Name="FAction" Width="120" FontSize="11.5" Margin="0,0,12,0" VerticalAlignment="Center">
+                    <ComboBoxItem Content="— الكل —" IsSelected="True"/>
+                </ComboBox>
+                <TextBlock Text="الشاشة:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="FScreen" Width="110" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Text="المستند:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="FDoc" Width="110" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Text="من تاريخ:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="FFrom" Width="90" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,12,0"
+                         ToolTip="dd/MM/yyyy — فارغ = بلا حد أدنى"/>
+                <TextBlock Text="إلى تاريخ:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="FTo" Width="90" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,12,0"
+                         ToolTip="dd/MM/yyyy — فارغ = حتى الآن"/>
+                <Button Content="‹ الأقدم" Style="{StaticResource ErpButton}" Click="PageOlder_Click" ToolTip="الصفحة التالية من النتائج (السجلات الأقدم)"/>
+                <Button Content="الأحدث ›" Style="{StaticResource ErpButton}" Click="PageNewer_Click" ToolTip="العودة للصفحة الأحدث"/>
+                <Button Content="🔍 تطبيق" Style="{StaticResource ErpPrimaryButton}" Click="Apply_Click"/>
+                <Button Content="↺ تصفير" Style="{StaticResource ErpButton}" Margin="6,0,0,0" Click="Reset_Click"/>
+                <TextBlock x:Name="CountLabel" FontSize="11.5" Foreground="#0A246A" FontWeight="Bold" Margin="14,0,0,0" VerticalAlignment="Center"/>
+            </WrapPanel>
+        </Border>
+
+        <TextBlock DockPanel.Dock="Top" Margin="10,6" FontSize="11" Foreground="#555"
+                   Text="النقر المزدوج على صف يعرض كل الحقل (ما قبل/ما بعد) — السجل لا يُعدل ولا يُحذف (§48)"/>
+
+        <Grid Margin="10,4,10,10">
+        <DataGrid x:Name="Grid" Margin="0" AutoGenerateColumns="False" FontSize="11.5" IsReadOnly="True"
+                  MouseDoubleClick="Grid_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="التاريخ" Binding="{Binding Time}" Width="135"/>
+                <DataGridTextColumn Header="المستخدم" Binding="{Binding User}" Width="120"/>
+                <DataGridTextColumn Header="الجهاز" Binding="{Binding Machine}" Width="100"/>
+                <DataGridTextColumn Header="الإجراء" Binding="{Binding Action}" Width="90"/>
+                <DataGridTextColumn Header="الشاشة" Binding="{Binding Screen}" Width="110"/>
+                <DataGridTextColumn Header="المستند" Binding="{Binding Document}" Width="110"/>
+                <DataGridTextColumn Header="التفصيل (قبل ← بعد)" Binding="{Binding Detail}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <!-- §44 حالة فراغ موحّدة: الجدول الفارغ يوجّه المستخدم بدل أن يبدو مكسوراً -->
+        <TextBlock x:Name="EmptyHint" Visibility="Collapsed" IsHitTestVisible="False"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13" Foreground="#64748B"
+                   Text="لا توجد سجلات مطابقة للمرشحات الحالية"/>
+        </Grid>
+    </DockPanel>
+</UserControl>

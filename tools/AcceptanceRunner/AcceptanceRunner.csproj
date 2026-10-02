@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DateERP.Acceptance</RootNamespace>
+    <AssemblyName>AcceptanceRunner</AssemblyName>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/DatesErp.Application/DatesErp.Application.csproj" />
+    <ProjectReference Include="../../src/DatesErp.Infrastructure/DatesErp.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,38 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.BackupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="النسخ الاحتياطي والاستعادة — من السيرفر" Style="{StaticResource SectionTitle}"/>
+
+        <Border Grid.Row="1" Style="{StaticResource Card}">
+            <StackPanel>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="مجلد حفظ النسخ على السيرفر" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="FolderBox" Width="420" Text="C:\MfgSystem_1.50.74_Backups"/>
+                    </StackPanel>
+                </WrapPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                    <Button Content="💾 نسخة كاملة + تحقق" Style="{StaticResource PrimaryButton}" Click="Backup_Click"/>
+                    <Button Content="✔ تحقق من نسخة" Style="{StaticResource SecondaryButton}" Click="Verify_Click"/>
+                    <Button Content="📂 استعراض النسخ" Style="{StaticResource SecondaryButton}" Click="List_Click"/>
+                    <Button Content="⏬ استعادة" Style="{StaticResource DangerButton}" Click="Restore_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,12,0,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="النسخ الاحتياطية المتاحة" FontWeight="Bold" FontSize="15" Margin="0,0,0,8" Foreground="#1B4D3E"/>
+                <ListBox x:Name="BackupsList" FontSize="13"/>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

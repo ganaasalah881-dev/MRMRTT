@@ -1,0 +1,49 @@
+﻿<Window x:Class="DatesErp.Desktop.Views.LotPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="اختيار دفعة خام للتخطيط — جميع الدفعات المتاحة معروضة فوراً" Width="1100" Height="600"
+        FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner"
+        Background="#F8FAFC" ShowInTaskbar="False" ResizeMode="CanResize">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8" Padding="10">
+            <StackPanel>
+                <TextBlock Text="📦 جميع الدفعات المتاحة معروضة فوراً — اختر دفعة لتنزل تلقائياً إلى خطة الإنتاج" FontWeight="Bold" FontSize="12" Margin="0,0,0,6"/>
+                <TextBlock Text="مرتبة من الأقدم وصولاً (FIFO) — الأقدم أولاً. التنبيه يظهر إن اخترت دفعة حديثة بينما توجد دفعات أقدم لنفس العميل أو لعملاء آخرين." TextWrapping="Wrap" FontSize="11" Foreground="#666" Margin="0,0,0,6"/>
+                <DockPanel>
+                    <TextBlock Text="تصفية اختيارية:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,8,0"/>
+                    <TextBox x:Name="SearchBox" FontSize="13" Padding="6,4" TextChanged="SearchBox_TextChanged" ToolTip="اختياري — اتركه فارغاً لعرض الكل، أو اكتب اسم عميل / رقم دفعة / صنف"/>
+                    <Button Content="عرض الكل" Style="{StaticResource ErpButton}" Margin="8,0,0,0" Click="ShowAll_Click"/>
+                </DockPanel>
+                <TextBlock x:Name="CountText" Text="—" FontSize="11" Foreground="#555" Margin="0,6,0,0"/>
+                <TextBlock x:Name="FifoHint" Text="" FontSize="11" FontWeight="Bold" Foreground="#B45309" Margin="0,4,0,0" TextWrapping="Wrap" Visibility="Collapsed"/>
+            </StackPanel>
+        </Border>
+
+        <Border DockPanel.Dock="Top" Style="{StaticResource WhiteCard}" Margin="0,0,0,8">
+            <DataGrid x:Name="LotsGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                      RowHeight="30" FontSize="12.5" CanUserAddRows="False"
+                      MouseDoubleClick="LotsGrid_DoubleClick"
+                      SelectionMode="Single" SelectionUnit="FullRow">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="تاريخ الوصول" Binding="{Binding ArrivalDate, StringFormat=dd/MM/yyyy}" Width="100"/>
+                    <DataGridTextColumn Header="العميل" Binding="{Binding CustomerName}" Width="*"/>
+                    <!-- §1.50.69 FIX: الدفعة/الشحنة برقم سند استلام الشحنات (ShipmentNo = DocumentNumber) -->
+                    <DataGridTextColumn Header="رقم سند الاستلام 📦" Binding="{Binding ShipmentNo}" Width="140"/>
+                    <DataGridTextColumn Header="الدفعة (داخلي)" Binding="{Binding LotCode}" Width="110"/>
+                    <DataGridTextColumn Header="الصنف الخام" Binding="{Binding ProductName}" Width="140"/>
+                    <DataGridTextColumn Header="المتبقي كجم" Binding="{Binding RemainingKg, StringFormat=N1}" Width="110"/>
+                    <DataGridTextColumn Header="المتاح للتخطيط" Binding="{Binding AvailableForDateKg, StringFormat=N1}" Width="120"/>
+                    <DataGridTextColumn Header="الوحدة" Binding="{Binding ReceiptUnit}" Width="70"/>
+                    <DataGridTextColumn Header="حالة المعالجة" Binding="{Binding TreatmentStatus}" Width="110"/>
+                    <DataGridTextColumn Header="أيام بالمخزن" Binding="{Binding DaysInStock}" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="✅ اختيار" Style="{StaticResource ErpPrimaryButton}" Margin="0,0,8,0" Click="Ok_Click" IsDefault="True"/>
+            <Button Content="✖ إلغاء" Style="{StaticResource ErpButton}" Click="Cancel_Click" IsCancel="True"/>
+        </StackPanel>
+        <TextBlock Text="تلميح: جميع الدفعات مرتبة FIFO — الأقدم أولاً. إن اخترت دفعة حديثة بينما توجد أقدم، سيظهر تنبيه: العميل فلان له دفعة بتاريخ أسبق، هل تريد الاستمرار؟" TextWrapping="Wrap" FontSize="11" Foreground="#666" Margin="0,8,0,0" DockPanel.Dock="Bottom"/>
+    </DockPanel>
+</Window>

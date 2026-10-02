@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.ProductBOMView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <DockPanel Margin="12">
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+            <StackPanel>
+                <TextBlock Text="📋 مكونات الإنتاج / احتياجات الصنف التام" FontSize="22" FontWeight="Bold" Foreground="{StaticResource DarkTitleBrush}"/>
+                <TextBlock Text="عند اختيار الصنف التام، أضف الأصناف المساعدة التي يحتاجها — الكمية مرتبطة بمواصفة الصنف التام وليس بالخام." 
+                           TextWrapping="Wrap" Foreground="{StaticResource MutedTextBrush}" FontSize="13" Margin="0,4,0,0"/>
+                <TextBlock Text="مثال: سكري 8 كجم → كرتون 8 كجم 1 وحدة/كرتون، ملصق سكري 1، كيس داخلي 1، مادة مساعدة X 0.020 كجم لكل كرتون"
+                           TextWrapping="Wrap" Foreground="{StaticResource LightMutedBrush}" FontSize="11" Margin="0,6,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+            <StackPanel>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="الصنف التام *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="FinishedBox" Width="300" DisplayMemberPath="ProductNameAr" SelectedValuePath="Id" SelectionChanged="Finished_Changed"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="الصنف المساعد *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="AuxBox" Width="260" DisplayMemberPath="ProductNameAr" SelectedValuePath="Id"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="الوحدة:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="UnitBox" Width="90" IsEditable="True" Text="وحدة"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock x:Name="QtyLabel" Text="الكمية لكل كرتون *:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="QtyBox" Width="110" Text="1"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="طريقة الحساب:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="CalcBox" Width="150" SelectedIndex="0" SelectionChanged="Calc_Changed">
+                            <ComboBoxItem Content="لكل كرتون" Tag="PerCarton"/>
+                            <ComboBoxItem Content="لكل كجم" Tag="PerKg"/>
+                            <ComboBoxItem Content="حسب كمية الإنتاج" Tag="PerProduction"/>
+                        </ComboBox>
+                    </StackPanel>
+                    <Button Content="➕ إضافة للاحتياجات" Style="{StaticResource ErpPrimaryButton}" Click="Add_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+                    <Button Content="🔄 تحديث" Style="{StaticResource ErpButton}" Click="Refresh_Click" VerticalAlignment="Bottom"/>
+                </WrapPanel>
+                <TextBlock x:Name="CalcHint" Text="الكمية مرتبطة بمواصفة الصنف التام — مثال: 3500 كرتون × 1 = 3500 ملصق، 3500 × 0.020 = 70 كجم" 
+                           TextWrapping="Wrap" Foreground="{StaticResource PrimaryBrush}" FontSize="11" Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border Style="{StaticResource Card}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="احتياجات الصنف التام المحدد" FontWeight="Bold" FontSize="13" Margin="0,0,0,6"/>
+                <DataGrid x:Name="BOMGrid" AutoGenerateColumns="False" IsReadOnly="False" CanUserAddRows="False" RowHeight="34" MinHeight="300">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="الصنف التام" Binding="{Binding FinishedProductName}" Width="160" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="الصنف المساعد" Binding="{Binding AuxiliaryProductName}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="الوحدة" Binding="{Binding Unit}" Width="80"/>
+                        <DataGridTextColumn Header="الكمية" Binding="{Binding QtyPerCarton}" Width="130"/>
+                        <DataGridTextColumn Header="طريقة الحساب" Binding="{Binding CalculationMethodAr}" Width="130" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="حذف" Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="🗑" Style="{StaticResource ErpDangerButton}" Click="Delete_Click" Tag="{Binding}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </DockPanel>
+</UserControl>

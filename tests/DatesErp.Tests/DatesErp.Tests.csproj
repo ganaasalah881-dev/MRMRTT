@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- §دين تقني مُقرّ به: تفعيل Nullable على كود قديم يُنتج هذا الضجيج.
+         الكبت موثّق ومقصود — خفّض هذه القائمة تدريجياً كلما نُظّف كل ملف.
+         لا تُضف تحذيرات جديدة إلى هذه القائمة. -->
+    <NoWarn>$(NoWarn);CS8618;CS8625;CS8601;CS8603;CS8602;CS8600;CS8629;CS8604;CS8632;CS8714;CS8765</NoWarn>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Same versions as Desktop: exercise export dependencies without loading WPF. -->
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
+    <PackageReference Include="System.IO.Packaging" Version="8.0.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Test actual WPF-independent row state / notifications, without loading WindowsDesktop on Linux. -->
+    <Compile Include="../../tools/PlanningAcceptance/PlanningScenarios.cs" Link="PlanningScenarios.cs" />
+    <Compile Include="../../tools/PlanningAcceptance/ActualDeliveryScenarios.cs" Link="ActualDeliveryScenarios.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Mvvm/ActualProductionRows.cs" Link="UiModels/ActualProductionRows.cs" />
+    <Compile Include="../../tools/PlanningAcceptance/TodayOrdersScenarios.cs" Link="TodayOrdersScenarios.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Mvvm/PlanningRows.cs" Link="UiModels/PlanningRows.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Mvvm/ReceivingItemRow.cs" Link="UiModels/ReceivingItemRow.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../../src/DatesErp.Desktop/Printing/PrintLayout.cs" Link="Printing/PrintLayout.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Printing/PrintSchema.cs" Link="Printing/PrintSchema.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Printing/DocumentDesigns.cs" Link="Printing/DocumentDesigns.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Printing/StoredPrintModels.cs" Link="Printing/StoredPrintModels.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Views/PhaseDocModel.cs" Link="Printing/PhaseDocModel.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Views/ReceivingPrintModel.cs" Link="Printing/ReceivingPrintModel.cs" />
+    <Compile Include="../../src/DatesErp.Desktop/Views/PlanningPrintModel.cs" Link="Printing/PlanningPrintModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DatesErp.Core\DatesErp.Core.csproj" />
+    <ProjectReference Include="..\..\src\DatesErp.Application\DatesErp.Application.csproj" />
+    <ProjectReference Include="..\..\src\DatesErp.Infrastructure\DatesErp.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

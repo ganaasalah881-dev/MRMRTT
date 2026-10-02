@@ -1,0 +1,182 @@
+name: MfgSystem 1.50.74 CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'arena/**'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+jobs:
+  structural-policy:
+    name: Structural and XAML policy checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test policy guards
+        run: python -m unittest discover -s tools/ci -p 'test_*.py'
+      - name: RTL, empty handlers, legacy double policy, and XAML hex baseline
+        run: python tools/ci/structural_checks.py
+      - name: XAML element names vs C# references
+        run: python tools/ci/verify_xaml_names.py
+
+  windows-build-test-package:
+    name: Windows .NET 8 build, tests, WPF smoke, and package
+    needs: structural-policy
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore solution
+        run: dotnet restore DateERP.sln --nologo
+      - name: Build full solution in Release
+        run: dotnet build DateERP.sln -c Release --no-restore --nologo -warnaserror
+      - name: Run the full xUnit suite
+        run: dotnet test tests/DatesErp.Tests/DatesErp.Tests.csproj -c Release --no-build --no-restore --nologo --logger "trx;LogFileName=results.trx"
+      - name: Full-cycle service acceptance
+        run: dotnet run --project tools/AcceptanceRunner/AcceptanceRunner.csproj -c Release --no-build
+      - name: Planning and capacity service acceptance
+        run: dotnet run --project tools/PlanningAcceptance/PlanningAcceptance.csproj -c Release --no-build
+      - name: Unit and inventory rule audit
+        run: dotnet run --project audit/UnitRuleAudit/UnitRuleAudit.csproj -c Release --no-build
+      - name: Actual Windows WPF smoke suites
+        shell: pwsh
+        run: |
+          $projects = @(
+            'tools/ReceivingWpfSmoke/ReceivingWpfSmoke.csproj',
+            'tools/PlanningCapacityWpfSmoke/PlanningCapacityWpfSmoke.csproj',
+            'tools/TodayOrdersWpfSmoke/TodayOrdersWpfSmoke.csproj',
+            'tools/ActualDeliveryWpfSmoke/ActualDeliveryWpfSmoke.csproj'
+          )
+          foreach ($project in $projects) {
+            Write-Host "Running actual WPF smoke: $project"
+            dotnet run --project $project -c Release --no-build
+            if ($LASTEXITCODE -ne 0) { throw "WPF smoke failed: $project (exit $LASTEXITCODE)" }
+          }
+          dotnet run --project tools/PrintWpfSmoke/PrintWpfSmoke.csproj -c Release --no-build -- "$env:RUNNER_TEMP\print-smoke-evidence"
+          if ($LASTEXITCODE -ne 0) { throw "Print WPF smoke failed (exit $LASTEXITCODE)" }
+      - name: Restore win-x64 runtime pack
+        run: dotnet restore src/DatesErp.Desktop/DatesErp.Desktop.csproj -r win-x64 --nologo
+      - name: Publish self-contained Windows package
+        shell: pwsh
+        run: |
+          $version = '1.50.74'
+          $out = 'artifacts/MfgSystem_1.50.74_win-x64'
+          $zip = 'artifacts/MfgSystem_1.50.74_win-x64.zip'
+          if (Test-Path $out) { Remove-Item $out -Recurse -Force }
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          dotnet publish 'src/DatesErp.Desktop/DatesErp.Desktop.csproj' -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false --no-restore -o $out
+          if ($LASTEXITCODE -ne 0) { throw 'dotnet publish failed' }
+          if (-not (Test-Path "$out/MfgSystem.exe")) { throw 'MfgSystem.exe not produced' }
+          $files = @(
+            'Installer/2-تنصيب.bat',
+            'Installer/تشغيل_1.50.74.bat',
+            'Installer/فحص_المتطلبات.bat',
+            'Installer/إلغاء_التنصيب.bat',
+            'Installer/README_التنصيب.md'
+          )
+          foreach ($file in $files) { Copy-Item -LiteralPath $file -Destination $out -Force }
+          $projectVersion = (Select-String -Path 'src/DatesErp.Desktop/DatesErp.Desktop.csproj' -Pattern '<Version>([^<]+)</Version>').Matches[0].Groups[1].Value
+          if ($projectVersion -ne $version) { throw "Project version mismatch: $projectVersion" }
+          Set-Content -LiteralPath "$out/VERSION.txt" -Value $version -Encoding ascii
+          $sha = (Get-FileHash -LiteralPath "$out/MfgSystem.exe" -Algorithm SHA256).Hash.ToUpperInvariant()
+          if ($sha.Length -ne 64) { throw 'Invalid SHA-256 result' }
+          Set-Content -LiteralPath "$out/SHA256.txt" -Value $sha -Encoding ascii
+          Compress-Archive -Path "$out/*" -DestinationPath $zip -Force
+          if (-not (Test-Path $zip)) { throw 'Production ZIP was not created' }
+          Write-Host "Package: $out"
+          Write-Host "ZIP: $zip"
+          Write-Host "SHA256: $sha"
+      - name: Install and first-launch smoke on a clean Windows runner
+        shell: pwsh
+        run: |
+          $package = 'artifacts/MfgSystem_1.50.74_win-x64'
+          $install = Join-Path $env:RUNNER_TEMP 'MfgSystem_1.50.74_install_smoke'
+          $data = Join-Path $env:LOCALAPPDATA 'MfgSystem/1.50.74'
+          if (Test-Path $data) { throw "Expected a clean runner data directory, found: $data" }
+          if (Test-Path $install) { Remove-Item $install -Recurse -Force }
+          $env:MFGSYSTEM_INSTALL_DIR = $install
+          & (Join-Path $package '2-تنصيب.bat') /NO-LAUNCH /NO-PAUSE
+          if ($LASTEXITCODE -ne 0) { throw "Versioned installer failed with exit $LASTEXITCODE" }
+          $desktop = [Environment]::GetFolderPath('Desktop')
+          $shortcut = Join-Path $desktop 'MfgSystem 1.50.74.lnk'
+          if (-not (Test-Path $shortcut)) { throw 'Version-specific desktop shortcut was not created.' }
+          $shell = New-Object -ComObject WScript.Shell
+          $shortcutTarget = $shell.CreateShortcut($shortcut).TargetPath
+          if ([IO.Path]::GetFullPath($shortcutTarget) -ine [IO.Path]::GetFullPath((Join-Path $install 'تشغيل_1.50.74.bat'))) { throw "Shortcut points at the wrong target: $shortcutTarget" }
+          $installedExe = Join-Path $install 'MfgSystem.exe'
+          if (-not (Test-Path $installedExe)) { throw 'Installer did not copy MfgSystem.exe' }
+          $version = (Get-Content -LiteralPath (Join-Path $install 'VERSION.txt') -Raw).Trim()
+          if ($version -ne '1.50.74') { throw "Installed version mismatch: $version" }
+          $expected = (Get-Content -LiteralPath (Join-Path $install 'SHA256.txt') -Raw).Trim()
+          $actual = (Get-FileHash -LiteralPath $installedExe -Algorithm SHA256).Hash
+          if ($actual -ne $expected) { throw 'Installed EXE hash mismatch' }
+          & (Join-Path $install 'تشغيل_1.50.74.bat')
+          if ($LASTEXITCODE -ne 0) { throw "Version-specific launcher failed with exit $LASTEXITCODE" }
+          $bootLog = Join-Path $data 'logs/boot_trace.txt'
+          $database = Join-Path $data 'mfgsystem_local.db'
+          $deadline = (Get-Date).AddSeconds(90)
+          $booted = $false
+          while ((Get-Date) -lt $deadline) {
+            Start-Sleep -Seconds 2
+            if ((Test-Path (Join-Path $data 'config.json')) -and (Test-Path $database) -and (Test-Path $bootLog)) {
+              $trace = Get-Content -LiteralPath $bootLog -Raw
+              if ($trace.Contains('تم إنشاء القاعدة وبذر البيانات الأساسية.')) { $booted = $true; break }
+            }
+            $app = Get-Process -Name MfgSystem -ErrorAction SilentlyContinue
+            if (-not $app -and (Test-Path $bootLog)) {
+              $trace = Get-Content -LiteralPath $bootLog -Raw
+              if ($trace.Contains('فشل') -or $trace.Contains('Exception')) { break }
+            }
+          }
+          if (-not $booted) {
+            if (Test-Path $bootLog) { Get-Content -LiteralPath $bootLog -Tail 100 }
+            throw 'Clean first launch did not create and seed the isolated SQLite database.'
+          }
+          $app = Get-Process -Name MfgSystem -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $installedExe }
+          if (-not $app) { throw 'Installed WPF process did not remain open after first launch.' }
+          $appIds = @($app.Id)
+          $app | Stop-Process -Force
+          foreach ($id in $appIds) { Wait-Process -Id $id -Timeout 15 -ErrorAction SilentlyContinue }
+          & (Join-Path $package 'إلغاء_التنصيب.bat') /KEEP-DATA /NO-PAUSE
+          if ($LASTEXITCODE -ne 0) { throw "Version-specific uninstaller failed with exit $LASTEXITCODE" }
+          if (Test-Path $install) { throw 'Uninstaller left this versioned program directory behind.' }
+          if (-not (Test-Path (Join-Path $data 'config.json')) -or -not (Test-Path $database)) { throw 'Uninstaller must keep this release data by default.' }
+      - name: Upload test diagnostics and WPF print evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostics-windows
+          path: |
+            **/TestResults/**/*.trx
+            ${{ runner.temp }}/print-smoke-evidence/**
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload versioned Windows installer package
+        uses: actions/upload-artifact@v4
+        with:
+          name: mfgsystem-1.50.74-win-x64
+          path: artifacts/MfgSystem_1.50.74_win-x64.zip
+          if-no-files-found: error
+          retention-days: 30

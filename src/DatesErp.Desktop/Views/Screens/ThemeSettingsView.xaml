@@ -1,0 +1,155 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.ThemeSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DatesErp.Desktop.Views.Screens"
+             FlowDirection="RightToLeft">
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Style="{StaticResource Card}" Padding="10" Margin="0,0,0,8">
+            <WrapPanel VerticalAlignment="Center">
+                <TextBlock Text="الثيم الحالي:" Style="{StaticResource FieldLabel}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                <ComboBox x:Name="ProfilesBox" Width="190" DisplayMemberPath="Name" SelectionChanged="Profile_Changed"/>
+                <Button Content="➕ ثيم جديد" Style="{StaticResource ErpButton}" Click="NewTheme_Click" Margin="10,2,3,2"/>
+                <Button Content="🗑 حذف الثيم" Style="{StaticResource ErpDangerButton}" Click="DeleteTheme_Click" Margin="3,2"/>
+                <TextBlock Text="الوضع العام:" Style="{StaticResource FieldLabel}" Margin="20,0,8,0" VerticalAlignment="Center"/>
+                <ComboBox x:Name="ModeBox" Width="125" SelectionChanged="Preview_Changed">
+                    <ComboBoxItem Content="فاتح Light" Tag="Light"/>
+                    <ComboBoxItem Content="داكن Dark" Tag="Dark"/>
+                    <ComboBoxItem Content="تلقائي Auto" Tag="Auto"/>
+                </ComboBox>
+                <TextBlock Text="كل تعديل يظهر فوراً في المعاينة وعلى الواجهة الحالية. الحفظ يثبّت الثيم للمستخدمين." Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center" Margin="18,0,0,0"/>
+            </WrapPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*" MinWidth="470"/>
+                <ColumnDefinition Width="1*" MinWidth="360"/>
+            </Grid.ColumnDefinitions>
+            <TabControl Grid.Column="0" Margin="0,0,8,0">
+                <TabItem Header="🎨 الألوان">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <WrapPanel Margin="8">
+                            <local:ThemeColorField x:Name="PrimaryField" Label="لون الواجهة الرئيسي" KeyName="PrimaryColor"/>
+                            <local:ThemeColorField x:Name="SecondaryField" Label="لون الواجهة الثانوي" KeyName="SecondaryColor"/>
+                            <local:ThemeColorField x:Name="BackgroundField" Label="لون الخلفيات" KeyName="BackgroundColor"/>
+                            <local:ThemeColorField x:Name="WindowBackgroundField" Label="خلفية النوافذ" KeyName="WindowBackgroundColor"/>
+                            <local:ThemeColorField x:Name="TableBackgroundField" Label="خلفية الجداول" KeyName="TableBackgroundColor"/>
+                            <local:ThemeColorField x:Name="TableHeaderField" Label="رؤوس الجداول" KeyName="TableHeaderColor"/>
+                            <local:ThemeColorField x:Name="TextField" Label="النص الرئيسي" KeyName="TextColor"/>
+                            <local:ThemeColorField x:Name="SecondaryTextField" Label="النص الثانوي" KeyName="SecondaryTextColor"/>
+                            <local:ThemeColorField x:Name="ButtonField" Label="الأزرار" KeyName="ButtonColor"/>
+                            <local:ThemeColorField x:Name="ButtonHoverField" Label="الأزرار عند المرور" KeyName="ButtonHoverColor"/>
+                            <local:ThemeColorField x:Name="ButtonPressedField" Label="الأزرار عند الضغط" KeyName="ButtonPressedColor"/>
+                            <local:ThemeColorField x:Name="ButtonTextField" Label="لون نص الأزرار" KeyName="ButtonTextColor"/>
+                            <local:ThemeColorField x:Name="BorderField" Label="الحدود" KeyName="BorderColor"/>
+                            <local:ThemeColorField x:Name="SuccessField" Label="نجاح" KeyName="SuccessColor"/>
+                            <local:ThemeColorField x:Name="WarningField" Label="تحذير" KeyName="WarningColor"/>
+                            <local:ThemeColorField x:Name="ErrorField" Label="خطأ" KeyName="ErrorColor"/>
+                            <local:ThemeColorField x:Name="InfoField" Label="معلومات" KeyName="InfoColor"/>
+                            <local:ThemeColorField x:Name="SelectedRowField" Label="الصف المحدد" KeyName="SelectedRowColor"/>
+                            <local:ThemeColorField x:Name="HoverRowField" Label="الصف عند المرور" KeyName="HoverRowColor"/>
+                            <local:ThemeColorField x:Name="AlternateRowField" Label="الصفوف المتبادلة" KeyName="AlternateRowColor"/>
+                            <local:ThemeColorField x:Name="CardField" Label="خلفية البطاقات" KeyName="CardBackgroundColor"/>
+                            <local:ThemeColorField x:Name="InputField" Label="خلفية حقول الإدخال" KeyName="InputBackgroundColor"/>
+                            <local:ThemeColorField x:Name="TitleBarField" Label="رأس الصفحة" KeyName="TitleBarColor"/>
+                        </WrapPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="🔤 الخطوط والأحجام">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="14">
+                            <TextBlock Text="أنواع الخطوط" Style="{StaticResource SectionTitle}"/>
+                            <WrapPanel>
+                                <StackPanel Margin="4"><TextBlock Text="الخط الرئيسي" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="BodyFontBox" Width="170" SelectionChanged="Preview_Changed"><ComboBoxItem Content="Segoe UI"/><ComboBoxItem Content="Tahoma"/><ComboBoxItem Content="Arial"/><ComboBoxItem Content="Calibri"/><ComboBoxItem Content="Cairo"/></ComboBox></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="خط العناوين" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="HeadingFontBox" Width="170" SelectionChanged="Preview_Changed"><ComboBoxItem Content="Segoe UI"/><ComboBoxItem Content="Tahoma"/><ComboBoxItem Content="Arial"/><ComboBoxItem Content="Calibri"/><ComboBoxItem Content="Cairo"/></ComboBox></StackPanel>
+                            </WrapPanel>
+                            <TextBlock Text="الأحجام" Style="{StaticResource SectionTitle}" Margin="0,16,0,4"/>
+                            <WrapPanel>
+                                <StackPanel Margin="4"><TextBlock Text="الحجم الأساسي" Style="{StaticResource FieldLabel}"/><TextBox x:Name="BaseFontBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="عنوان الصفحة" Style="{StaticResource FieldLabel}"/><TextBox x:Name="PageTitleBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="عنوان القسم" Style="{StaticResource FieldLabel}"/><TextBox x:Name="SectionTitleBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="نص الجداول" Style="{StaticResource FieldLabel}"/><TextBox x:Name="TableFontBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="نص الأزرار" Style="{StaticResource FieldLabel}"/><TextBox x:Name="ButtonFontBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                            </WrapPanel>
+                            <WrapPanel Margin="4,14,0,0"><CheckBox x:Name="HeadingBoldCheck" Content="عناوين عريضة" Margin="0,0,18,0" Checked="Preview_Changed" Unchecked="Preview_Changed"/><CheckBox x:Name="BodyBoldCheck" Content="النصوص عريضة" Checked="Preview_Changed" Unchecked="Preview_Changed"/></WrapPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="▣ الحدود والأزرار">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="14">
+                            <TextBlock Text="الحقول والحدود" Style="{StaticResource SectionTitle}"/>
+                            <WrapPanel>
+                                <StackPanel Margin="4"><TextBlock Text="سمك الحدود" Style="{StaticResource FieldLabel}"/><TextBox x:Name="BorderThicknessBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="نصف قطر الزوايا" Style="{StaticResource FieldLabel}"/><TextBox x:Name="CornerRadiusBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="Padding" Style="{StaticResource FieldLabel}"/><TextBox x:Name="PaddingBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="شكل الحقول" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="InputStyleBox" Width="125" SelectionChanged="Preview_Changed"><ComboBoxItem Content="بسيط Simple" Tag="Simple"/><ComboBoxItem Content="مسطح Flat" Tag="Flat"/><ComboBoxItem Content="مستدير Rounded" Tag="Rounded"/></ComboBox></StackPanel>
+                            </WrapPanel>
+                            <WrapPanel Margin="4,8,0,0"><CheckBox x:Name="UnderlineCheck" Content="إظهار تسطير الحقول" Margin="0,0,18,0" Checked="Preview_Changed" Unchecked="Preview_Changed"/><CheckBox x:Name="TextBoxBorderCheck" Content="حدود TextBox" Margin="0,0,18,0" Checked="Preview_Changed" Unchecked="Preview_Changed"/><CheckBox x:Name="ButtonBorderCheck" Content="حدود الأزرار" Checked="Preview_Changed" Unchecked="Preview_Changed"/></WrapPanel>
+                            <TextBlock Text="شكل الأزرار" Style="{StaticResource SectionTitle}" Margin="0,18,0,4"/>
+                            <WrapPanel>
+                                <StackPanel Margin="4"><TextBlock Text="النمط" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="ButtonStyleBox" Width="135" SelectionChanged="Preview_Changed"><ComboBoxItem Content="مربع Square" Tag="Square"/><ComboBoxItem Content="مستدير Rounded" Tag="Rounded"/><ComboBoxItem Content="Flat" Tag="Flat"/><ComboBoxItem Content="Border" Tag="Border"/></ComboBox></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="عرض الزر (0 = تلقائي)" Style="{StaticResource FieldLabel}"/><TextBox x:Name="ButtonWidthBox" Width="105" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="ارتفاع الزر" Style="{StaticResource FieldLabel}"/><TextBox x:Name="ButtonHeightBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="حجم الأيقونة" Style="{StaticResource FieldLabel}"/><TextBox x:Name="IconSizeBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="موضع الأيقونة" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="IconPositionBox" Width="115" SelectionChanged="Preview_Changed"><ComboBoxItem Content="قبل النص" Tag="Before"/><ComboBoxItem Content="بعد النص" Tag="After"/><ComboBoxItem Content="بدون" Tag="None"/></ComboBox></StackPanel>
+                            </WrapPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="▤ الجداول والنوافذ">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="14">
+                            <TextBlock Text="الجداول" Style="{StaticResource SectionTitle}"/>
+                            <WrapPanel>
+                                <StackPanel Margin="4"><TextBlock Text="ارتفاع الصف" Style="{StaticResource FieldLabel}"/><TextBox x:Name="RowHeightBox" Width="90" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="محاذاة النص" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="AlignmentBox" Width="110" SelectionChanged="Preview_Changed"><ComboBoxItem Content="يمين" Tag="Right"/><ComboBoxItem Content="وسط" Tag="Center"/><ComboBoxItem Content="يسار" Tag="Left"/></ComboBox></StackPanel>
+                            </WrapPanel>
+                            <WrapPanel Margin="4,8,0,0"><CheckBox x:Name="TableBorderCheck" Content="حدود الجدول" Margin="0,0,18,0" Checked="Preview_Changed" Unchecked="Preview_Changed"/><CheckBox x:Name="ColumnDividerCheck" Content="فواصل الأعمدة" Margin="0,0,18,0" Checked="Preview_Changed" Unchecked="Preview_Changed"/><CheckBox x:Name="PaginationCheck" Content="إظهار الترقيم" Checked="Preview_Changed" Unchecked="Preview_Changed"/></WrapPanel>
+                            <TextBlock Text="النوافذ والشاشات" Style="{StaticResource SectionTitle}" Margin="0,18,0,4"/>
+                            <WrapPanel>
+                                <StackPanel Margin="4"><TextBlock Text="ارتفاع شريط العنوان" Style="{StaticResource FieldLabel}"/><TextBox x:Name="TitleBarHeightBox" Width="100" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="عرض القائمة الجانبية" Style="{StaticResource FieldLabel}"/><TextBox x:Name="SidebarWidthBox" Width="100" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="عرض المحتوى (0 = كامل)" Style="{StaticResource FieldLabel}"/><TextBox x:Name="ContentWidthBox" Width="105" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="شكل القائمة" Style="{StaticResource FieldLabel}"/><ComboBox x:Name="SidebarStyleBox" Width="120" SelectionChanged="Preview_Changed"><ComboBoxItem Content="كلاسيكي" Tag="Classic"/><ComboBoxItem Content="مسطح" Tag="Flat"/><ComboBoxItem Content="بطاقات" Tag="Cards"/></ComboBox></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="القائمة الجانبية" Style="{StaticResource FieldLabel}"/><CheckBox x:Name="SidebarCheck" Content="ظاهرة" Checked="Preview_Changed" Unchecked="Preview_Changed" Margin="4,8"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="ظل البطاقات" Style="{StaticResource FieldLabel}"/><CheckBox x:Name="ShadowCheck" Content="مفعل" Checked="Preview_Changed" Unchecked="Preview_Changed" Margin="4,8"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="عمق الظل" Style="{StaticResource FieldLabel}"/><TextBox x:Name="ShadowDepthBox" Width="80" TextChanged="Preview_Changed"/></StackPanel>
+                                <StackPanel Margin="4"><TextBlock Text="شفافية الظل" Style="{StaticResource FieldLabel}"/><TextBox x:Name="ShadowOpacityBox" Width="80" TextChanged="Preview_Changed"/></StackPanel>
+                            </WrapPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+
+            <Border Grid.Column="1" Style="{StaticResource Card}" Padding="14">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="👁 المعاينة المباشرة" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock Text="عنوان الصفحة التجريبي" FontSize="{DynamicResource ThemePageTitleFontSize}" FontWeight="Bold" Foreground="{DynamicResource ThemeTableHeaderBrush}" Margin="0,0,0,12"/>
+                        <TextBlock Text="حقل إدخال" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="نص تجريبي قابل للتخصيص" Margin="0,0,0,8"/>
+                        <TextBlock Text="قائمة اختيار" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox SelectedIndex="0" Margin="0,0,0,10"><ComboBoxItem Content="العنصر الأول"/><ComboBoxItem Content="العنصر الثاني"/></ComboBox>
+                        <WrapPanel Margin="0,0,0,10"><Button Content="زر عادي" Style="{StaticResource ErpButton}"/><Button Content="زر رئيسي" Style="{StaticResource ErpPrimaryButton}"/><Button Content="زر اعتماد" Style="{StaticResource ErpApproveButton}"/></WrapPanel>
+                        <Border Style="{StaticResource Card}" Padding="10" Margin="0,0,0,10"><StackPanel><TextBlock Text="بطاقة معاينة" Style="{StaticResource SectionTitle}"/><TextBlock Text="تتغير ألوان البطاقات والحدود والظل مباشرة." TextWrapping="Wrap" Foreground="{DynamicResource ThemeSecondaryTextBrush}"/></StackPanel></Border>
+                        <DataGrid Height="125" AutoGenerateColumns="False" Margin="0,0,0,10"><DataGrid.Columns><DataGridTextColumn Header="الصنف" Binding="{Binding Item}" Width="*"/><DataGridTextColumn Header="الحالة" Binding="{Binding Status}" Width="100"/><DataGridTextColumn Header="الكمية" Binding="{Binding Qty}" Width="80"/></DataGrid.Columns><DataGrid.ItemsSource><x:Array Type="{x:Type local:ThemePreviewRow}"><local:ThemePreviewRow Item="تجريبي" Status="جاهز" Qty="125"/><local:ThemePreviewRow Item="مثال" Status="قيد العمل" Qty="48"/></x:Array></DataGrid.ItemsSource></DataGrid>
+                        <WrapPanel><Border Background="{DynamicResource ThemeSuccessBrush}" CornerRadius="4" Padding="8" Margin="2"><TextBlock Text="✓ نجاح العملية" Foreground="White"/></Border><Border Background="{DynamicResource ThemeWarningBrush}" CornerRadius="4" Padding="8" Margin="2"><TextBlock Text="⚠ تحذير" Foreground="White"/></Border><Border Background="{DynamicResource ThemeErrorBrush}" CornerRadius="4" Padding="8" Margin="2"><TextBlock Text="✕ خطأ" Foreground="White"/></Border></WrapPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        <WrapPanel Grid.Row="2" HorizontalAlignment="Left" Margin="0,8,0,0">
+            <Button Content="↩ إلغاء التعديلات" Style="{StaticResource ErpButton}" Click="Cancel_Click" Margin="3"/>
+            <Button Content="⟳ استعادة الافتراضي" Style="{StaticResource ErpButton}" Click="Defaults_Click" Margin="3"/>
+            <Button Content="⚡ تطبيق" Style="{StaticResource ErpApproveButton}" Click="Apply_Click" Margin="3"/>
+            <Button Content="💾 حفظ" Style="{StaticResource ErpPrimaryButton}" Click="Save_Click" Margin="3"/>
+        </WrapPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,99 @@
+﻿<Window x:Class="DatesErp.Desktop.Views.AuxAdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="إدارة المواد المساعدة — مجموعات/مواد/معادلات/مواصفات عملاء" Width="1050" Height="640"
+        FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner">
+    <TabControl>
+        <TabItem Header="🗂 المجموعات">
+            <StackPanel Margin="10">
+                <WrapPanel Margin="0,0,0,8">
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="اسم المجموعة *:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="GrpNameBox" Width="200"/>
+                    </StackPanel>
+                    <Button Content="➕ حفظ المجموعة" Style="{StaticResource ErpPrimaryButton}" Click="SaveGroup_Click" VerticalAlignment="Bottom"/>
+                </WrapPanel>
+                <DataGrid x:Name="GrpGrid" Height="300" IsReadOnly="True" RowHeight="28"/>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="📦 المواد">
+            <StackPanel Margin="10">
+                <WrapPanel Margin="0,0,0,8">
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="اسم المادة *:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="MatNameBox" Width="200"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="المجموعة *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="MatGrpBox" Width="180" DisplayMemberPath="GroupNameAr" SelectedValuePath="GroupCode"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="الوحدة (كجم/لفة/كرتون/حبة/قطعة/لتر...):" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="MatUnitBox" Width="130" IsEditable="True" Text="قطعة"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="درجة الجودة:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="MatQualityBox" Width="120"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="التكلفة الافتراضية:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="MatCostBox" Width="90" Text="0"/>
+                    </StackPanel>
+                    <Button Content="➕ حفظ المادة" Style="{StaticResource ErpPrimaryButton}" Click="SaveMat_Click" VerticalAlignment="Bottom"/>
+                </WrapPanel>
+                <DataGrid x:Name="MatGrid" Height="280" IsReadOnly="True" RowHeight="28"/>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="⚙ معادلات الاستهلاك">
+            <StackPanel Margin="10">
+                <WrapPanel Margin="0,0,0,8">
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="المنتج التام *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="FProdBox" Width="200" DisplayMemberPath="ProductNameAr" SelectedValuePath="Id"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="المادة *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="FMatBox" Width="200" DisplayMemberPath="MaterialNameAr" SelectedValuePath="Id"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="وضع الاستهلاك *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="FModeBox" Width="190"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="المعامل (لكل كرتون/ساعة):" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="FQtyBox" Width="90" Text="1"/>
+                    </StackPanel>
+                    <CheckBox x:Name="FOptChk" Content="اختيارية (غير ملزمة)" VerticalAlignment="Bottom" Margin="0,0,12,6"/>
+                    <Button Content="➕ حفظ المعادلة" Style="{StaticResource ErpPrimaryButton}" Click="SaveFormula_Click" VerticalAlignment="Bottom"/>
+                </WrapPanel>
+                <TextBlock Text="الديزل وما يشابهه: اختر وضع «إدخال فعلي عند الإقفال» — لا يُفرض اشتقاق من ساعات الخطة." Foreground="#B45309" FontSize="11" Margin="0,0,0,6"/>
+                <DataGrid x:Name="FormulaGrid" Height="250" IsReadOnly="True" RowHeight="28"/>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="👥 مواصفات العملاء (ماركات الكرتون)">
+            <StackPanel Margin="10">
+                <WrapPanel Margin="0,0,0,8">
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="العميل *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="SpecCustBox" Width="200" DisplayMemberPath="CustomerName" SelectedValuePath="Id"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="مادة الكرتون/الماركة *:" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="SpecMatBox" Width="200" DisplayMemberPath="MaterialNameAr" SelectedValuePath="Id"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="اسم الماركة:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="SpecBrandBox" Width="150"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="تكلفة الوحدة:" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="SpecCostBox" Width="90" Text="0"/>
+                    </StackPanel>
+                    <Button Content="➕ حفظ المواصفة" Style="{StaticResource ErpPrimaryButton}" Click="SaveSpec_Click" VerticalAlignment="Bottom"/>
+                </WrapPanel>
+                <TextBlock Text="عند الصرف: مادة كرتون العميل تُحدَّد من مواصفته — أي صرف مادة أخرى يُحذَّر ولا يُعرقل التجارب." Foreground="#14532D" FontSize="11" Margin="0,0,0,6"/>
+                <DataGrid x:Name="SpecGrid" Height="250" IsReadOnly="True" RowHeight="28"/>
+            </StackPanel>
+        </TabItem>
+    </TabControl>
+</Window>

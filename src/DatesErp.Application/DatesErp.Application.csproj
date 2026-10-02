@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\DatesErp.Core\DatesErp.Core.csproj" />
+    <ProjectReference Include="..\DatesErp.Infrastructure\DatesErp.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- §دين تقني مُقرّ به: تفعيل Nullable على كود قديم يُنتج هذا الضجيج.
+         الكبت موثّق ومقصود — خفّض هذه القائمة تدريجياً كلما نُظّف كل ملف.
+         لا تُضف تحذيرات جديدة إلى هذه القائمة. -->
+    <NoWarn>$(NoWarn);CS8618;CS8625;CS8601;CS8603;CS8602;CS8600;CS8629;CS8604;CS8632;CS8714;CS8765;CS8619;CS8620</NoWarn>
+  </PropertyGroup>
+
+</Project>

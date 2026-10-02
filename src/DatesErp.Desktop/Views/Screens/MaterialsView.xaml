@@ -1,0 +1,56 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.MaterialsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <WrapPanel Grid.Row="0">
+            <TextBlock Text="صرف المواد المساعدة لأوامر الإنتاج" Style="{StaticResource SectionTitle}"/>
+            <Button Content="🛠 إدارة بيانات المواد" ToolTip="إدارة المجموعات والمواد والمعادلات ومواصفات العملاء" Style="{StaticResource ErpPrimaryButton}" Click="OpenAdmin_Click" Margin="18,6,0,0"/>
+        </WrapPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource Card}">
+            <StackPanel>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="أمر الإنتاج" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="OrderBox" Width="260" SelectionChanged="Order_Changed"/>
+                    </StackPanel>
+                </WrapPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                    <Button Content="📤 صرف المحتسب للمواد" Style="{StaticResource ErpApproveButton}" Click="Issue_Click"/>
+                    <Button Content="↩ إرجاع الفائض" Style="{StaticResource SecondaryButton}" Click="Return_Click"/>
+                    <Button Content="🔄 تحديث" Style="{StaticResource SecondaryButton}" Click="Refresh_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,12,0,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="مواد الأمر (المحتسب / المصروف / المستهلك / الهالك / الفائض)" FontWeight="Bold" FontSize="15" Margin="0,0,0,8" Foreground="#1B4D3E"/>
+                <DataGrid x:Name="MatGrid" SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="المادة" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="المحتسبة" Binding="{Binding Calculated}" Width="90"/>
+                        <DataGridTextColumn Header="المصروفة" Binding="{Binding Issued}" Width="90"/>
+                        <DataGridTextColumn Header="المستهلكة" Binding="{Binding Consumed}" Width="90"/>
+                        <DataGridTextColumn Header="الهالك" Binding="{Binding Wasted}" Width="80"/>
+                        <DataGridTextColumn Header="الفائض" Binding="{Binding Unused}" Width="90"/>
+                        <DataGridTemplateColumn Header="تسجيل استهلاك" Width="130">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="تسجيل" Tag="{Binding RowId}" Click="Consume_Click" Margin="4" Padding="8,2" Style="{StaticResource ErpButton}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

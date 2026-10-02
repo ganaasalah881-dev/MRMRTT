@@ -1,0 +1,85 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.SupplierMovementReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <!-- §B103 — تقرير حركة الموردين حسب الأصناف (تحليلي كميات):
+         فلاتر الفترة والمورد والبحث ← معاينة شبكية ← طباعة/PDF بنفس شكل التصميم
+         المرجعي المعتمد (محرك SupplierMovementPrint). الألوان موارد ثيم فقط. -->
+    <UserControl.Resources>
+        <Style x:Key="SmCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ErpLineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="12"/>
+        </Style>
+        <Style x:Key="SmLbl" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="Foreground" Value="{StaticResource NavyBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,6,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource LightBgBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- بطاقة الفلاتر -->
+        <Border Grid.Row="0" Style="{StaticResource SmCard}" Margin="10,10,10,6">
+            <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="من تاريخ :" Style="{StaticResource SmLbl}"/>
+                <DatePicker x:Name="FromBox" Width="130" Margin="0,0,14,0"/>
+                <TextBlock Text="الى تاريخ :" Style="{StaticResource SmLbl}"/>
+                <DatePicker x:Name="ToBox" Width="130" Margin="0,0,14,0"/>
+                <TextBlock Text="المورد :" Style="{StaticResource SmLbl}"/>
+                <ComboBox x:Name="PartyBox" Width="220" Margin="0,0,14,0"/>
+                <TextBlock Text="بحث صنف :" Style="{StaticResource SmLbl}"/>
+                <TextBox x:Name="SearchBox" Width="170" Margin="0,0,14,0" VerticalContentAlignment="Center"/>
+                <Button Content="▶ تنفيذ" Style="{StaticResource ErpPrimaryButton}" Click="Run_Click" Margin="0,0,8,0"/>
+                <Button Content="🖨️ معاينة وطباعة" Style="{StaticResource ErpButton}" Click="Print_Click" Margin="0,0,8,0"/>
+                <Button Content="📄 PDF" Style="{StaticResource ErpButton}" Click="Pdf_Click" Margin="0,0,8,0"/>
+                <Button Content="📊 Excel" Style="{StaticResource ErpButton}" Click="Excel_Click"/>
+            </WrapPanel>
+        </Border>
+
+        <!-- نتيجة التقرير -->
+        <Border Grid.Row="1" Style="{StaticResource SmCard}" Margin="10,4,10,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="RowsCount" Grid.Row="0" Text="حدّد الفترة ثم اضغط «تنفيذ»."
+                           FontSize="12.5" FontWeight="Bold" Foreground="{StaticResource NavyBrush}" Margin="2,0,2,8"/>
+                <DataGrid x:Name="SmGrid" Grid.Row="1"
+                          AutoGenerateColumns="False" IsReadOnly="True"
+                          HeadersVisibility="Column" CanUserAddRows="False"
+                          FontSize="13" RowHeight="32" ColumnHeaderHeight="42"
+                          GridLinesVisibility="All"
+                          HorizontalGridLinesBrush="{DynamicResource ThemeGridLineBrush}"
+                          VerticalGridLinesBrush="{DynamicResource ThemeGridLineBrush}"
+                          BorderThickness="0" Background="{DynamicResource ThemeTableBackgroundBrush}"
+                          ColumnHeaderStyle="{StaticResource ReportHeaderStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="المورد" Binding="{Binding Party}" Width="150"/>
+                        <DataGridTextColumn Header="رقم الصنف" Binding="{Binding Code}" Width="80"/>
+                        <DataGridTextColumn Header="اسم الصنف" Binding="{Binding Name}" Width="190"/>
+                        <DataGridTextColumn Header="الوحدة" Binding="{Binding Unit}" Width="60"/>
+                        <DataGridTextColumn Header="الرصيد الإفتتاح" Binding="{Binding Open}" Width="90"/>
+                        <DataGridTextColumn Header="المشتريات" Binding="{Binding Purch}" Width="85"/>
+                        <DataGridTextColumn Header="توريد مخزني" Binding="{Binding SupIn}" Width="85"/>
+                        <DataGridTextColumn Header="مردود المشتريات" Binding="{Binding PurchRet}" Width="95"/>
+                        <DataGridTextColumn Header="صرف مخزني" Binding="{Binding Issue}" Width="85"/>
+                        <DataGridTextColumn Header="المبيعات" Binding="{Binding Sales}" Width="80"/>
+                        <DataGridTextColumn Header="مردود المبيعات" Binding="{Binding SalesRet}" Width="95"/>
+                        <DataGridTextColumn Header="الكمية المتبقية" Binding="{Binding Remain}" Width="95"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

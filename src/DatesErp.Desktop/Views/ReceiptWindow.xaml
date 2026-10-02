@@ -1,0 +1,79 @@
+﻿<Window x:Class="DatesErp.Desktop.Views.ReceiptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="استلام الإنتاج التام" Width="1050" Height="640"
+        FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner">
+    <DockPanel Background="#F1F5F9">
+        <!-- شريط العنوان -->
+        <Border DockPanel.Dock="Top" Padding="12,6">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#0A246A" Offset="0"/>
+                    <GradientStop Color="#3A6EA5" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <DockPanel>
+                <TextBlock x:Name="HeadTitle" DockPanel.Dock="Right" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                <TextBlock x:Name="HeadState" DockPanel.Dock="Left" Foreground="White" FontSize="12" FontWeight="Bold"/>
+            </DockPanel>
+        </Border>
+
+        <!-- لافتة تجاوز الفحص الموثق -->
+        <Border x:Name="BypassBanner" DockPanel.Dock="Top" Background="#FFFBEB" BorderBrush="#FCD34D" BorderThickness="0,0,0,1" Padding="12,6">
+            <TextBlock x:Name="BypassText" Foreground="#92400E" FontWeight="Bold" FontSize="12" TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- شريط الإجراء -->
+        <Border DockPanel.Dock="Bottom" Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="0,1,0,0" Padding="10,8">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BtnCreate" Content="📦 إنشاء وإصدار السند" Style="{StaticResource ErpApproveButton}" Margin="0,0,8,0" Click="Create_Click"/>
+                <!-- §B110: الأزرار الثلاثة إجراء واحد يتغير حسب الحالة — نمط أخضر واحد لثبات الشكل -->
+                <Button x:Name="BtnIssue" Content="📤 إصدار السند" Style="{StaticResource ErpApproveButton}" Margin="0,0,8,0" Click="Issue_Click"/>
+                <Button x:Name="BtnReceive" Content="🏬 تنفيذ الاستلام (الفعلي)" Style="{StaticResource ErpApproveButton}" Margin="0,0,8,0" Click="Receive_Click"/>
+                <Button Content="✖ إغلاق" Style="{StaticResource ErpButton}" Click="Close_Click"/>
+            </StackPanel>
+        </Border>
+
+        <TabControl x:Name="Tabs" Margin="8" Background="White">
+            <TabItem x:Name="TabDelivery" Header="📋 أمر التسليم">
+                <DataGrid x:Name="DeliveryGrid" Margin="8" IsReadOnly="True" FontSize="11.5" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="العميل 👤" Binding="{Binding CustomerName}" Width="*"/>
+                        <DataGridTextColumn Header="الصنف 🏷️" Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="العبوة" Binding="{Binding PackName}" Width="100"/>
+                        <DataGridTextColumn Header="الدفعة" Binding="{Binding LotCode}" Width="90"/>
+                        <DataGridTextColumn Header="الكمية (كجم)" Binding="{Binding QtyKg}" Width="100"/>
+                        <DataGridTextColumn Header="العبوات" Binding="{Binding PackageCount}" Width="80"/>
+                        <DataGridTextColumn Header="المستلَم (كجم)" Binding="{Binding ReceivedKg}" Width="110"/>
+                        <DataGridTextColumn Header="المتبقي (كجم)" Binding="{Binding RemainingKg}" Width="110"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem x:Name="TabReceive" Header="🏬 الاستلام (الفعلي)">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="سند الاستلام:" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <ComboBox x:Name="CmbReceipt" Width="260" FontSize="12" SelectionChanged="Receipt_Changed"/>
+                    </StackPanel>
+                    <DataGrid x:Name="ReceiveGrid" Grid.Row="1" FontSize="11.5" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="العميل 👤" Binding="{Binding CustomerName}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الصنف 🏷️" Binding="{Binding ProductName}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="العبوة" Binding="{Binding PackName}" Width="90" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الدفعة" Binding="{Binding LotCode}" Width="90" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الصافي (كجم)" Binding="{Binding NetKg}" Width="100" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="مستلَم سابقاً (كجم)" Binding="{Binding ReceivedKg}" Width="130" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="المتبقي (كجم)" Binding="{Binding RemainingKg}" Width="100" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الفعلي المستلَم الآن (كجم) ✍️" Binding="{Binding ActualKg, UpdateSourceTrigger=PropertyChanged}" Width="170"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

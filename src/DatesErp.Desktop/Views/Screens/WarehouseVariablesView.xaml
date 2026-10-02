@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.WarehouseVariablesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <!-- §B70: شاشة عامة لمتغيرات المخازن ضمن إعدادات النظام.
+         كل تبويب = متغير، وكل تبويب يحمل الأزرار الخمسة الإلزامية: إضافة حفظ تعديل بحث حذف. -->
+    <DockPanel LastChildFill="True">
+        <TabControl>
+            <!-- ١) المجموعات: رقم المجموعة + الاسم فقط -->
+            <TabItem Header="🗂️ المجموعات" FontSize="13">
+                <DockPanel Margin="10">
+                    <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock Text="🗂️ مجموعات المخازن — رقم المجموعة والاسم فقط" FontSize="12" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8"/>
+                            <WrapPanel>
+                                <StackPanel Margin="0,0,14,0">
+                                    <TextBlock Text="رقم المجموعة (فارغ = تلقائي):" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="GroupCodeBox" Width="120"/>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,14,0">
+                                    <TextBlock Text="الاسم *:" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="GroupNameBox" Width="240"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                    <Button Content="➕ إضافة" Style="{StaticResource ErpPrimaryButton}" Click="GroupAdd_Click" Margin="0,0,6,0"/>
+                                    <Button Content="💾 حفظ" Style="{StaticResource ErpPrimaryButton}" Click="GroupSave_Click" Margin="0,0,6,0"/>
+                                    <Button Content="✏️ تعديل" Style="{StaticResource ErpButton}" Click="GroupEdit_Click" Margin="0,0,6,0"/>
+                                    <Button Content="🔍 بحث" Style="{StaticResource ErpButton}" Click="GroupSearch_Click" Margin="0,0,6,0"/>
+                                    <Button Content="🗑️ حذف" Style="{StaticResource ErpDangerButton}" Click="GroupDelete_Click" Margin="0,0,6,0"/>
+                                </StackPanel>
+                            </WrapPanel>
+                            <WrapPanel Margin="0,8,0,0">
+                                <TextBlock Text="🔎 بحث بالرقم/الاسم:" FontWeight="Bold" FontSize="11.5" Foreground="#1F2937" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox x:Name="GroupSearchBox" Width="260" TextChanged="GroupSearch_Changed" VerticalAlignment="Center"/>
+                                <Button Content="عرض الكل" Style="{StaticResource ErpButton}" Click="GroupShowAll_Click" Margin="8,0,0,0"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                    <DataGrid x:Name="GroupsGrid" RowHeight="30" MouseDoubleClick="GroupsGrid_DoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="رقم المجموعة" Binding="{Binding Code}" Width="120" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الاسم" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الحالة" Binding="{Binding Status}" Width="90" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+            <!-- ٢) الوحدات: اسم الوحدة فقط — لا ترقيم ولا شيء آخر -->
+            <TabItem Header="📏 الوحدات" FontSize="13">
+                <DockPanel Margin="10">
+                    <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock Text="📏 وحدات القياس — اسم الوحدة فقط" FontSize="12" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8"/>
+                            <WrapPanel>
+                                <StackPanel Margin="0,0,14,0">
+                                    <TextBlock Text="اسم الوحدة *:" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="UnitNameBox" Width="200"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                    <Button Content="➕ إضافة" Style="{StaticResource ErpPrimaryButton}" Click="UnitAdd_Click" Margin="0,0,6,0"/>
+                                    <Button Content="💾 حفظ" Style="{StaticResource ErpPrimaryButton}" Click="UnitSave_Click" Margin="0,0,6,0"/>
+                                    <Button Content="✏️ تعديل" Style="{StaticResource ErpButton}" Click="UnitEdit_Click" Margin="0,0,6,0"/>
+                                    <Button Content="🔍 بحث" Style="{StaticResource ErpButton}" Click="UnitSearch_Click" Margin="0,0,6,0"/>
+                                    <Button Content="🗑️ حذف" Style="{StaticResource ErpDangerButton}" Click="UnitDelete_Click" Margin="0,0,6,0"/>
+                                </StackPanel>
+                            </WrapPanel>
+                            <WrapPanel Margin="0,8,0,0">
+                                <TextBlock Text="🔎 بحث بالاسم:" FontWeight="Bold" FontSize="11.5" Foreground="#1F2937" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBox x:Name="UnitSearchBox" Width="260" TextChanged="UnitSearch_Changed" VerticalAlignment="Center"/>
+                                <Button Content="عرض الكل" Style="{StaticResource ErpButton}" Click="UnitShowAll_Click" Margin="8,0,0,0"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                    <DataGrid x:Name="UnitsGrid" RowHeight="30" MouseDoubleClick="UnitsGrid_DoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="اسم الوحدة" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الحالة" Binding="{Binding Status}" Width="90" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

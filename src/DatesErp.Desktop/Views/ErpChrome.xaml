@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.ErpChrome"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <!-- ═══ إطار النافذة الكلاسيكي الموحّد (مطابق لشاشات النظام المعتمدة) ═══ -->
+    <Border BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1">
+        <DockPanel Background="{DynamicResource ThemeBackgroundBrush}">
+
+            <!-- 1) شريط العنوان الأزرق -->
+            <Border DockPanel.Dock="Top" Height="{DynamicResource ThemeTitleBarHeight}" Padding="10,4">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="{DynamicResource ThemeTitleBarColor}" Offset="0"/>
+                        <GradientStop Color="{DynamicResource ThemeButtonHoverColor}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Right" Foreground="White" FontWeight="Bold" FontSize="13"
+                               Text="{Binding TitleText, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                        <!-- §B54: كانا زرين ميتين — وُصلا بالتصغير/التكبير الفعلي للنافذة -->
+                        <!-- §B110: أزرار شريط مخصصة بلا حدود دنيا تكسر الشريط -->
+                        <Button Content="_" Style="{StaticResource ErpChromeButton}" Click="Min_Click"/>
+                        <Button Content="□" Style="{StaticResource ErpChromeButton}" Click="Max_Click"/>
+                        <Button Content="✕" Style="{StaticResource ErpChromeCloseButton}"
+                                Click="Close_Click"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- 2) شريط المعلومات (القسم | السجلات | المستخدم || كود الشاشة + التاريخ) -->
+            <Border DockPanel.Dock="Top" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="0,0,0,1" Padding="12,4">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <TextBlock Text="القسم:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="ModuleText" Foreground="{DynamicResource ThemeTableHeaderBrush}" FontWeight="Bold" FontSize="11.5" Margin="4,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="إجمالي السجلات:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="CountText" Foreground="{DynamicResource ThemeSuccessBrush}" FontWeight="Bold" FontSize="11.5" Margin="4,0,12,0" VerticalAlignment="Center" Text="0 سجل"/>
+                        <TextBlock Text="المستخدم:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="UserText" Foreground="{DynamicResource ThemeTableHeaderBrush}" FontSize="11.5" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Border Background="{DynamicResource ThemeAlternateRowBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1" Padding="5,1">
+                            <TextBlock x:Name="ScreenCodeText" FontFamily="Consolas" FontWeight="Bold" Foreground="{DynamicResource ThemeTableHeaderBrush}" FontSize="11"/>
+                        </Border>
+                        <TextBlock x:Name="DateText" FontSize="11" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- 3) شريط الأدوات -->
+            <Border DockPanel.Dock="Top" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="0,0,0,1" Padding="6,4">
+                <ContentPresenter x:Name="ToolbarArea"/>
+            </Border>
+
+            <!-- 4) شريط التدقيق السفلي -->
+            <Border DockPanel.Dock="Bottom" Background="{DynamicResource ThemeBackgroundBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="0,1,0,0" Padding="10,4">
+                <DockPanel>
+                    <TextBlock x:Name="AuditText" FontSize="11" Foreground="{DynamicResource ThemeTextBrush}" DockPanel.Dock="Right"/>
+                    <TextBlock x:Name="MachineText" FontSize="11" Foreground="{DynamicResource ThemeTextBrush}" DockPanel.Dock="Left"/>
+                </DockPanel>
+            </Border>
+
+            <!-- 5) منطقة المحتوى -->
+            <Border Background="{DynamicResource ThemeBackgroundBrush}" Padding="8">
+                <ContentPresenter x:Name="BodyArea"/>
+            </Border>
+        </DockPanel>
+    </Border>
+</UserControl>

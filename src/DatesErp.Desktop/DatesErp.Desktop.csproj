@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>MfgSystem</AssemblyName>
+    <RootNamespace>DatesErp.Desktop</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>1.50.74</Version>
+    <!-- §1.50.74 DEV: مسار أوامر الإنتاج يعرض الخطط المجدولة القادمة ويصدر الأمر بتاريخ الخطة؛
+         النسخة المستقرة 1.50.73 محفوظة في tag stable-1.50.73 ولا تُعدّل. -->
+    <AssemblyVersion>1.50.74.0</AssemblyVersion>
+    <AssemblyFileVersion>1.50.74.0</AssemblyFileVersion>
+    <InformationalVersion>1.50.74</InformationalVersion>
+    <Authors>شركة التمور</Authors>
+    <Product>نظام التصنيع — النظام المتكامل لإدارة عمليات التصنيع</Product>
+    <Description>نظام سطح مكتب احترافي متعدد المستخدمين لإدارة وتصنيع التمور</Description>
+    <SatelliteResourceLanguages>ar</SatelliteResourceLanguages>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DatesErp.Application\DatesErp.Application.csproj" />
+    <ProjectReference Include="..\DatesErp.Core\DatesErp.Core.csproj" />
+    <ProjectReference Include="..\DatesErp.Infrastructure\DatesErp.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
+    <!-- Security override for ClosedXML/OpenXML transitive packaging dependency. -->
+    <PackageReference Include="System.IO.Packaging" Version="8.0.1" />
+        <PackageReference Include="PdfSharp" Version="6.1.1" />
+        <PackageReference Include="QRCoder" Version="1.6.0" />
+  </ItemGroup>
+
+</Project>

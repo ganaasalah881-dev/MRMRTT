@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="DatesErp.Desktop.Views.Screens.UsersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="المستخدمون والأدوار — إدارة مركزية" Style="{StaticResource SectionTitle}"/>
+
+        <Border Grid.Row="1" Style="{StaticResource Card}">
+            <StackPanel>
+                <WrapPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="رقم الدخول *" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="UserCodeBox" Width="130" ToolTip="اتركه فارغاً ليُولد رقم تلقائياً — هذا الرقم يدخل به المستخدم"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="اسم الدخول" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="UserNameBox" Width="160"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="الاسم الكامل" Style="{StaticResource FieldLabel}"/>
+                        <TextBox x:Name="FullNameBox" Width="200"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="كلمة المرور" Style="{StaticResource FieldLabel}"/>
+                        <PasswordBox x:Name="PasswordBox" Width="160"/>
+                    </StackPanel>
+                    <StackPanel Margin="0,0,14,0">
+                        <TextBlock Text="الدور" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox x:Name="RoleBox" Width="180"/>
+                    </StackPanel>
+                    <Button Content="💾 إنشاء مستخدم" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Click="Create_Click"/>
+                    <Button Content="🔄 تحديث" Style="{StaticResource SecondaryButton}" VerticalAlignment="Bottom" Click="Refresh_Click"/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,12,0,0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                    <Button Content="⏸ توقيف/تفعيل المحدد" Style="{StaticResource SecondaryButton}" Click="ToggleUser_Click" Margin="0,0,6,0"/>
+                    <Button Content="🔑 تصفير كلمة السر" Style="{StaticResource SecondaryButton}" Click="ResetPass_Click" Margin="0,0,6,0"/>
+                    <Button Content="🔓 فك قفل الحساب" Style="{StaticResource SecondaryButton}" Click="Unlock_Click" Margin="0,0,6,0"/>
+                    <Button Content="🔐 تغيير كلمة مروري" Style="{StaticResource SecondaryButton}" Click="ChangeMyPass_Click" Margin="0,0,6,0"/>
+                    <TextBlock Text="المستخدمون" FontWeight="Bold" FontSize="15" VerticalAlignment="Center" Foreground="#0A246A"/>
+                    <TextBlock Text="🔍 بحث:" FontWeight="Bold" FontSize="11.5" VerticalAlignment="Center" Margin="20,0,6,0"/>
+                    <TextBox x:Name="SearchBox" Width="300" TextChanged="Search_Changed" VerticalAlignment="Center"/>
+                </StackPanel>
+                <DataGrid x:Name="UsersGrid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="الكود" Binding="{Binding Code}" Width="90"/>
+                        <DataGridTextColumn Header="اسم الدخول" Binding="{Binding UserName}" Width="130"/>
+                        <DataGridTextColumn Header="الاسم الكامل" Binding="{Binding FullName}" Width="*"/>
+                        <DataGridTextColumn Header="آخر دخول" Binding="{Binding LastLogin}" Width="150"/>
+                        <DataGridTextColumn Header="الحالة" Binding="{Binding Status}" Width="90"/>
+                        <DataGridTextColumn Header="يجب تغيير كلمة المرور" Binding="{Binding MustChange}" Width="150"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

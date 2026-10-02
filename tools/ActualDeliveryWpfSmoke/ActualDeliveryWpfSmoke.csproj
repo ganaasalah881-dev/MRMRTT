@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net8.0-windows</TargetFramework><UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting><SatelliteResourceLanguages>ar</SatelliteResourceLanguages>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/DatesErp.Desktop/DatesErp.Desktop.csproj" />
+    <Compile Include="../../tests/DatesErp.Tests/TestHost.cs" Link="TestHost.cs" />
+  </ItemGroup>
+</Project>

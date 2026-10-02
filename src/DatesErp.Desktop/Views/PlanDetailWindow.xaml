@@ -1,0 +1,180 @@
+﻿<Window x:Class="DatesErp.Desktop.Views.PlanDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="تفاصيل خطة الإنتاج" Width="1080" Height="680"
+        FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner">
+    <DockPanel Background="#F1F5F9">
+        <!-- شريط العنوان -->
+        <Border DockPanel.Dock="Top" Padding="12,6">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#0A246A" Offset="0"/>
+                    <GradientStop Color="#3A6EA5" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <DockPanel>
+                <TextBlock x:Name="HeadTitle" DockPanel.Dock="Right" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                <TextBlock x:Name="HeadStatus" DockPanel.Dock="Left" Foreground="White" FontSize="12" FontWeight="Bold"/>
+            </DockPanel>
+        </Border>
+
+        <!-- لافتة سبب الحالة (إرجاع/إيقاف) — §B97 -->
+        <Border x:Name="ReasonBanner" DockPanel.Dock="Top" Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="0,0,0,1" Padding="12,6">
+            <StackPanel>
+                <TextBlock x:Name="ReasonText" Foreground="#991B1B" FontWeight="Bold" FontSize="12" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- شريط الإجراء السفلي — أزرار الدور × الحالة -->
+        <Border DockPanel.Dock="Bottom" Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="0,1,0,0" Padding="10,8">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BtnSubmit" Content="📨 إرسال للاعتماد" Style="{StaticResource ErpPrimaryButton}" Margin="0,0,8,0" Click="Submit_Click"/>
+                <Button x:Name="BtnApprove" Content="✅ اعتماد الخطة" Style="{StaticResource ErpApproveButton}" Margin="0,0,8,0" Click="Approve_Click"/>
+                <Button x:Name="BtnReturn" Content="↩️ إرجاع للتعديل (بسبب)" Style="{StaticResource ErpButton}" Margin="0,0,8,0" Click="Return_Click"/>
+                <Button x:Name="BtnUnapprove" Content="🔓 إلغاء الاعتماد" Style="{StaticResource ErpDangerButton}" Margin="0,0,8,0" Click="Unapprove_Click"/>
+                <Button Content="✖ إغلاق" Style="{StaticResource ErpButton}" Click="Close_Click"/>
+            </StackPanel>
+        </Border>
+
+        <TabControl Margin="8" Background="White">
+            <TabItem Header="📋 التفاصيل والبنود">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- الرأس: كل الحقول مجمّعة آلياً — لا إعادة إدخال -->
+                    <WrapPanel Grid.Row="0" Margin="0,0,0,8">
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="رقم الخطة" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FNumber" FontSize="13" FontWeight="Bold" Foreground="#0A246A"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="العنوان" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FTitle" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="النوع" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FType" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="الفترة" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FPeriod" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="المنشئ" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FCreator" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="تاريخ الإنشاء" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FCreated" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="اعتمدها" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FApprover" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="الإجمالي" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FTotal" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border x:Name="NotesBox" Background="#FFFBEB" BorderBrush="#FDE68A" BorderThickness="1" Padding="10,6">
+                            <StackPanel>
+                                <TextBlock Text="ملاحظات" FontSize="10.5" Foreground="#92400E"/>
+                                <TextBlock x:Name="FNotes" FontSize="12" FontWeight="Bold" TextWrapping="Wrap" MaxWidth="600"/>
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
+
+                    <!-- تقدم العملاء داخل الخطة -->
+                    <DataGrid x:Name="CustomerGrid" Grid.Row="1" Height="110" IsReadOnly="True" Margin="0,0,0,8" FontSize="11.5">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="العميل" Binding="{Binding CustomerName}" Width="*"/>
+                            <DataGridTextColumn Header="مخطط (كجم)" Binding="{Binding Planned}" Width="100"/>
+                            <DataGridTextColumn Header="منتَج (كجم)" Binding="{Binding Produced}" Width="100"/>
+                            <DataGridTextColumn Header="مقبول (كجم)" Binding="{Binding Accepted}" Width="100"/>
+                            <DataGridTextColumn Header="مسلَّم (كجم)" Binding="{Binding Delivered}" Width="100"/>
+                            <DataGridTextColumn Header="متبقي (كجم)" Binding="{Binding Remaining}" Width="100"/>
+                            <DataGridTextColumn Header="الحالة" Binding="{Binding StatusAr}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- بنود الخطة كاملة -->
+                    <DataGrid x:Name="ItemsGrid" Grid.Row="2" IsReadOnly="True" FontSize="11.5">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="التاريخ 📅" Binding="{Binding Date}" Width="95"/>
+                            <DataGridTextColumn Header="الوردية" Binding="{Binding Shift}" Width="100"/>
+                            <DataGridTextColumn Header="الخط" Binding="{Binding Line}" Width="100"/>
+                            <DataGridTextColumn Header="العميل" Binding="{Binding Customer}" Width="*"/>
+                            <DataGridTextColumn Header="الدفعة" Binding="{Binding Lot}" Width="90"/>
+                            <DataGridTextColumn Header="الصنف" Binding="{Binding Product}" Width="*"/>
+                            <DataGridTextColumn Header="العبوة" Binding="{Binding Pack}" Width="90"/>
+                            <DataGridTextColumn Header="مخطط (كجم)" Binding="{Binding PlannedKg}" Width="95"/>
+                            <DataGridTextColumn Header="مخطط (كرتون)" Binding="{Binding PlannedCtn}" Width="95"/>
+                            <DataGridTextColumn Header="منتَج (كجم)" Binding="{Binding ProducedKg}" Width="95"/>
+                            <DataGridTextColumn Header="مقبول (كجم)" Binding="{Binding AcceptedKg}" Width="95"/>
+                            <DataGridTextColumn Header="متبقي (كجم)" Binding="{Binding RemainingKg}" Width="95"/>
+                            <DataGridTextColumn Header="حالة التنفيذ" Binding="{Binding ExecStatus}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="📆 التوزيع اليومي">
+                <DataGrid x:Name="DayGrid" Margin="8" IsReadOnly="True" FontSize="11.5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="اليوم" Binding="{Binding Date}" Width="110"/>
+                        <DataGridTextColumn Header="عدد البنود" Binding="{Binding RowsCount}" Width="100"/>
+                        <DataGridTextColumn Header="المخطط (كجم)" Binding="{Binding PlannedKg}" Width="*"/>
+                        <DataGridTextColumn Header="المنتَج (كجم)" Binding="{Binding ProducedKg}" Width="*"/>
+                        <DataGridTextColumn Header="حالة اليوم" Binding="{Binding StatusAr}" Width="120"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <!-- §B98 — سجل التنفيذ اليومي: مخطط/مأمور/منتج/مقبول/مسلَّم + حالة اليوم -->
+            <TabItem Header="📋 سجل التنفيذ">
+                <DataGrid x:Name="ExecLogGrid" Margin="8" IsReadOnly="True" FontSize="11.5" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="اليوم" Binding="{Binding Date}" Width="110"/>
+                        <DataGridTextColumn Header="البنود" Binding="{Binding RowsCount}" Width="70"/>
+                        <DataGridTextColumn Header="المخطط (كجم)" Binding="{Binding PlannedKg}" Width="100"/>
+                        <DataGridTextColumn Header="مأمور (كجم)" Binding="{Binding OrderedKg}" Width="100"/>
+                        <DataGridTextColumn Header="المنتَج (كجم)" Binding="{Binding ProducedKg}" Width="100"/>
+                        <DataGridTextColumn Header="المقبول (كجم)" Binding="{Binding AcceptedKg}" Width="100"/>
+                        <DataGridTextColumn Header="المسلَّم (كجم)" Binding="{Binding DeliveredKg}" Width="100"/>
+                        <DataGridTextColumn Header="حالة اليوم" Binding="{Binding StatusAr}" Width="160"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Header="📜 تاريخ المستند">
+                <DataGrid x:Name="HistoryGrid" Margin="8" IsReadOnly="True" FontSize="11.5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="الوقت" Binding="{Binding Time}" Width="140"/>
+                        <DataGridTextColumn Header="المستخدم" Binding="{Binding User}" Width="140"/>
+                        <DataGridTextColumn Header="الإجراء" Binding="{Binding Action}" Width="130"/>
+                        <DataGridTextColumn Header="التفاصيل" Binding="{Binding Detail}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

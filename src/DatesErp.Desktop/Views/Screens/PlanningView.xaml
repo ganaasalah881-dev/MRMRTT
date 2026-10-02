@@ -1,0 +1,356 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.PlanningView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+    <!-- §B66: بناء من الصفر — صفحة واحدة قابلة للتمرير كنموذج الويب المرجعي.
+         لا DockPanels متداخلة ولا أقسام ثابتة تأكل الارتفاع: كل قسم صفّ في Grid،
+         والتمرير يوصل لكل شيء على أي حجم نافذة. جدول البنود بارتفاع مضمون 260. -->
+    <!-- §التخطيط الأفقي — شاشة واحدة: لا مستطيل «الخطط السابقة» أسفل الشاشة.
+         البحث عن الخطط المحفوظة صار في نافذة منبثقة (F9 / زر الشريط)، وبالنقر المزدوج
+         تُنزل الخطة بجميع بنودها إلى هذه الواجهة. -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- ١) المسار + الحالة -->
+            <Border Grid.Row="0" Background="#F8FAFC" BorderBrush="#5F5C48" BorderThickness="1.4" CornerRadius="4" Padding="10,6" Margin="0,0,0,6">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                        <TextBlock Text="مسار المعاملة:" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" FontSize="11" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Border x:Name="Step1" Width="24" Height="24" CornerRadius="12" Background="#16283C" BorderBrush="#C9A227" BorderThickness="1.5">
+                            <TextBlock Text="1" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="إعداد الخطة" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="5,0,8,0"/>
+                        <TextBlock Text="⟵" Foreground="#9A9782" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Border x:Name="Step2" Width="24" Height="24" CornerRadius="12" Background="#6B7280">
+                            <TextBlock Text="2" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="اعتماد المدير العام" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="5,0,8,0"/>
+                        <TextBlock Text="⟵" Foreground="#9A9782" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Border x:Name="Step3" Width="24" Height="24" CornerRadius="12" Background="#6B7280">
+                            <TextBlock Text="3" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="أوامر التشغيل" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="5,0,8,0"/>
+                        <TextBlock Text="⟵" Foreground="#9A9782" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Border x:Name="Step4" Width="24" Height="24" CornerRadius="12" Background="#6B7280">
+                            <TextBlock Text="4" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="الإقفال" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Button x:Name="SubmitBtn" Content="📤 إرسال للاعتماد" Style="{StaticResource ErpPrimaryButton}" Click="Submit_Click"/>
+                        <Button x:Name="ReturnBtn" Content="↩ إعادة للتعديل" Style="{StaticResource ErpButton}" Click="ReturnForRevision_Click" Visibility="Collapsed" Margin="6,0,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <Border x:Name="StatusBanner" Grid.Row="1" Background="#F8FAFC" BorderBrush="#5B7595" BorderThickness="1.4" Padding="8,5" Margin="0,6,0,6">
+                <!-- §التخطيط الأفقي: الحالة يميناً وشرائح السياق يساراً في سطر واحد -->
+                <DockPanel>
+                    <WrapPanel DockPanel.Dock="Left" VerticalAlignment="Center">
+                        <Border Background="#FFF7E0" BorderBrush="#E9CE7E" BorderThickness="1" CornerRadius="11" Padding="9,3" Margin="0,0,8,0">
+                            <TextBlock x:Name="ScheduledDateChip" Text="📅 تاريخ الإنتاج المحدد: —" FontSize="11.5" FontWeight="Bold" Foreground="#8A6A00"/>
+                        </Border>
+                        <Border Background="#EDF3EE" BorderBrush="#CADCCF" BorderThickness="1" CornerRadius="11" Padding="9,3" Margin="0,0,8,0">
+                            <TextBlock x:Name="PeriodChip" Text="الفترة: —" FontSize="11.5" FontWeight="Bold" Foreground="#14532D"/>
+                        </Border>
+                        <Border Background="#F3EEFB" BorderBrush="#D6C8EF" BorderThickness="1" CornerRadius="11" Padding="9,3">
+                            <TextBlock x:Name="ScopeChip" Text="النطاق: 👥 عدة عملاء (مجمع)" FontSize="11.5" FontWeight="Bold" Foreground="#6D28D9"/>
+                        </Border>
+                    </WrapPanel>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="StatusText" Text="مسودة قيد الإعداد 📝" FontSize="12" FontWeight="Bold" Foreground="#14532D"/>
+                        <!-- §B75: بصمة الإنشاء والاعتماد في رأس الشاشة -->
+                        <TextBlock x:Name="PlanMetaBox" Text="خطة جديدة — لم تُحفظ بعد · أنشأها: — · اعتمدها: —" FontSize="12" Foreground="{DynamicResource ThemeSecondaryTextBrush}" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- ٢) محددات الخطة -->
+            <Border Grid.Row="2" Style="{StaticResource Card}" BorderBrush="#5B7595" BorderThickness="1.4" Margin="0,0,0,6">
+                <StackPanel>
+                    <!-- صف 1: المحددات الأساسية — كود + عنوان + نوع + تاريخ/فترة + وردية + خط -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                            <TextBlock Text="كود الخطة:" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="CodeBox" Width="140" IsReadOnly="True" Background="#F1F5F9" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,14,0">
+                            <TextBlock Text="عنوان الخطة *:" Style="{StaticResource FieldLabel}"/>
+                            <TextBox x:Name="TitleBox" Width="220" FontWeight="Bold" Foreground="#14532D"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,0,14,0">
+                            <TextBlock Text="نوع الخطة:" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox x:Name="TypeBox" Width="110" SelectedIndex="0" SelectionChanged="TypeBox_Changed">
+                                <ComboBoxItem Content="يومية"/>
+                                <ComboBoxItem Content="أسبوعية"/>
+                                <ComboBoxItem Content="شهرية"/>
+                                <ComboBoxItem Content="فترة"/>
+                            </ComboBox>
+                        </StackPanel>
+                        <!-- تاريخ واحد لليومية، فترة لغيرها -->
+                        <StackPanel x:Name="StartPanel" Grid.Column="3" Margin="0,0,8,0">
+                            <TextBlock x:Name="StartLabel" Text="تاريخ الخطة *:" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker x:Name="StartBox" Width="135" SelectedDateChanged="PlanDates_Changed"/>
+                        </StackPanel>
+                        <StackPanel x:Name="EndPanel" Grid.Column="4" Margin="0,0,14,0">
+                            <TextBlock Text="إلى تاريخ *:" Style="{StaticResource FieldLabel}"/>
+                            <DatePicker x:Name="EndBox" Width="135" SelectedDateChanged="PlanDates_Changed"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="5" Margin="0,0,14,0">
+                            <TextBlock Text="الوردية *:" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox x:Name="ShiftBox" Width="170" SelectionChanged="CapacityInputs_Changed"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="6" Margin="0,0,0,0">
+                            <TextBlock Text="خط الإنتاج:" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox x:Name="LineBox" Width="140" SelectionChanged="CapacityInputs_Changed"/>
+                        </StackPanel>
+                    </Grid>
+                    <!-- صف 2: نطاق التخطيط + العميل + البيان -->
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,0">
+                            <TextBlock Text="نطاق التخطيط:" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <RadioButton x:Name="MultiRadio" Content="👥 عدة عملاء (مجمع)" IsChecked="True" FontWeight="Bold" GroupName="scope" Margin="0,0,10,0" Checked="Scope_Changed"/>
+                            <RadioButton x:Name="SingleRadio" Content="👤 عميل محدد" FontWeight="Bold" GroupName="scope" Checked="Scope_Changed"/>
+                        </StackPanel>
+                        <Border x:Name="SingleCustPanel" Grid.Column="1" Background="#FEF9C3" BorderBrush="#FACC15" BorderThickness="1" Padding="6,3" Visibility="Collapsed" Margin="0,0,14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="العميل:" FontWeight="Bold" Foreground="#854D0E" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <ComboBox x:Name="SingleCustBox" Width="220" DisplayMemberPath="CustomerName" SelectedValuePath="Id" SelectionChanged="SingleCust_Changed"/>
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <TextBlock Text="البيان:" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBox x:Name="NotesBox" Width="360"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ٣) أزرار الإدراج والاعتماد -->
+            <Border Grid.Row="3" Style="{StaticResource Card}" BorderBrush="#5B7595" BorderThickness="1.4" Margin="0,0,0,6">
+                <WrapPanel x:Name="InsertActionsPanel">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                        <RadioButton x:Name="ApproveRadio" Content="اعتماد" IsChecked="True" FontWeight="Bold" GroupName="planact" VerticalAlignment="Center"/>
+                        <RadioButton x:Name="HoldRadio" Content="تعليق" FontWeight="Bold" GroupName="planact" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <Button x:Name="ApproveActionBtn" Content="✅ اعتماد الخطة" Style="{StaticResource ErpApproveButton}" Click="ApproveAction_Click" Margin="0,0,6,0"/>
+                    <Button x:Name="SaveActionBtn" Content="💾 حفظ الخطة" Style="{StaticResource ErpPrimaryButton}" Click="Save_Click" Visibility="Collapsed" Margin="0,0,6,0"/>
+                    <Button x:Name="CustLotsBtn" Content="👤 أصناف العميل (F4)" Style="{StaticResource ErpButton}" Foreground="#14532D" Click="PickLot_Click" Margin="0,0,6,0"/>
+                    <Button Content="👥 أصناف العملاء (F6)" Style="{StaticResource ErpButton}" Foreground="{DynamicResource ThemeTextBrush}" Click="MultiCustomers_Click" Margin="0,0,6,0"/>
+                    <Button Content="📥 من استلام مباشر" Style="{StaticResource ErpButton}" Foreground="#B45309" Click="DirectReceipt_Click" Margin="0,0,6,0"/>
+                    <Button Content="⚖ اقتراح توزيع عادل" Style="{StaticResource ErpButton}" Foreground="#7C3AED" Click="Fair_Click" Margin="0,0,6,0"/>
+                    <Button Content="🔍 فحص الخطة" Style="{StaticResource ErpButton}" Foreground="#0A246A" Click="CheckPlan_Click" Margin="0,0,6,0"
+                            ToolTip="فحص الخطة متعددة العملاء: توزيع البنود (عملاء/أصناف) على أيام الفترة (من–إلى) بنفس عمل التوزيع — والحكم: قابلة للتنفيذ أم فيها عجز"/>
+                    <Button Content="✍️ إضافة يدوي" Style="{StaticResource ErpButton}" Click="Manual_Click" Margin="0,0,6,0"/>
+                    <Button Content="⎘ تكرار الصف" Style="{StaticResource ErpButton}" Click="DuplicateRow_Click" Margin="0,0,6,0" ToolTip="ينسخ الصف المحدد — إدخال 20 بند متشابه يصبح ثواني (7-ج)"/>
+                    <Button Content="📥 استيراد Excel" Style="{StaticResource ErpButton}" Click="ImportExcel_Click" Margin="0,0,6,0" ToolTip="استيراد بنود من ملف Excel — للخطط الكبيرة (7-د)"/>
+                    <Button Content="💾 حفظ كقالب" Style="{StaticResource ErpButton}" Click="SaveAsTemplate_Click" Margin="0,0,6,0" ToolTip="حفظ الخطة الحالية كقالب لإعادة استخدامها (8) قوالب ونسخ سندات"/>
+                    <Button Content="📋 تحميل قالب" Style="{StaticResource ErpButton}" Click="LoadTemplate_Click" Margin="0,0,6,0" ToolTip="تحميل بنود من قالب محفوظ"/>
+                </WrapPanel>
+            </Border>
+
+            <!-- ٤) شريط الطاقة والعدادات -->
+            <Border Grid.Row="4" Background="#F8FAFC" BorderBrush="#5B7595" BorderThickness="1.4" Padding="8,4" Margin="0,0,0,6">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <TextBlock Text="⏱️ حالة طاقة الوردية:" FontWeight="Bold" Foreground="#14532D" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock x:Name="CapacitySummary" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" MaxWidth="520"
+                                   Text="إجمالي المجدول: 0 كرتون (0.0 ساعة) من أصل 0 كرتون (0.0 ساعات)." Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center"
+                                   ToolTip="تفاصيل طاقة الأيام تظهر هنا عند التمرير"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <!-- §التخطيط الأفقي: شريط تقدّم بصري لاستغلال طاقة الوردية -->
+                        <ProgressBar x:Name="CapacityProgress" Width="150" Height="12" Minimum="0" Maximum="1" Value="0"
+                                     Margin="0,0,10,0" VerticalAlignment="Center"
+                                     ToolTip="المجدول من أصل طاقة الوردية — يتحوّل للأحمر عند تجاوز الطاقة"/>
+                        <TextBlock x:Name="TotItemsBox" Text="البنود: 0" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="TotCartonsBox" Text="كراتين: 0" FontWeight="Bold" Foreground="#14532D" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="TotQtyBox" Text="الوزن: 0 كجم" FontWeight="Bold" Foreground="#14532D" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="TotCustsBox" Text="عملاء: 0" FontWeight="Bold" Foreground="#7C3AED" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="RemainingBadge" Text="الساعات المتبقية: 0.0 س" FontWeight="Bold" Foreground="#16A34A" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- ٥) جدول البنود — تصميم احترافي: الجدول نفسه هو النموذج (1.50.57) -->
+            <Border Grid.Row="5" Style="{StaticResource Card}" Margin="0,0,0,6">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,6" LastChildFill="False">
+                        <TextBlock DockPanel.Dock="Right" Text="📦 بنود الخطة — اضغط على خلية العميل/الدفعة/الصنف للاختيار من جميع الدفعات المتاحة فوراً (FIFO)" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                            <Button x:Name="EditRowBtn" Content="✏️ تعديل البند" Style="{StaticResource ErpButton}" Click="EditRow_Click" ToolTip="تعديل التاريخ/الكمية لبند محفوظ" Margin="0,0,6,0"/>
+                            <Button Content="➕ صف جديد" Style="{StaticResource ErpPrimaryButton}" Click="AddEmptyRow_Click" ToolTip="إضافة صف جديد — جميع الدفعات معروضة فوراً"/>
+                        </StackPanel>
+                    </DockPanel>
+                    <!-- شريط تعليمات مختصر احترافي -->
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Margin="0,0,0,8">
+                        <Run FontWeight="Bold">طريقة العمل:</Run>
+                        <Run>1) اختر دفعة من الجدول — جميع الدفعات معروضة فوراً مرتبة من الأقدم وصولاً (FIFO). 2) عدّل الكراتين في نفس الصف — الوزن والطاقة تُحسب تلقائياً. 3) صف جديد يظهر تلقائياً تحته. عند اختيار دفعة حديثة بينما توجد أقدم، يظهر تنبيه: «العميل فلان له دفعة بتاريخ أسبق، هل تريد الاستمرار؟»</Run>
+                    </TextBlock>
+                    <DataGrid x:Name="RowsGrid" MinHeight="280" RowHeight="38" FontSize="13" ColumnHeaderHeight="38" AutoGenerateColumns="False" CanUserAddRows="False"
+                              AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" Background="{DynamicResource ThemeTableBackgroundBrush}" RowBackground="{DynamicResource ThemeTableBackgroundBrush}"
+                              GridLinesVisibility="All" HorizontalGridLinesBrush="{DynamicResource ThemeGridLineBrush}" VerticalGridLinesBrush="{DynamicResource ThemeGridLineBrush}"
+                              HeadersVisibility="Column" BorderBrush="#7C7660"
+                              LoadingRow="RowsGrid_LoadingRow">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="White"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsInvalid}" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource InvalidRowBrush}"/>
+                                        <Setter Property="ToolTip" Value="{Binding QuantityError}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Resources>
+                            <!-- زر اختيار داخل الخلية — يبدو كـ ComboBox احترافي -->
+                            <Style x:Key="PickCellButton" TargetType="Button" BasedOn="{StaticResource ErpButton}">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="6,3"/>
+                                <Setter Property="MinHeight" Value="28"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Padding" Value="3,2"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="م" Binding="{Binding No}" Width="36" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn x:Name="CustomerColumn" Header="العميل المالك 👤 *" Width="1.1*" MinWidth="130">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding CustomerName}" Click="CustomerName_Click" Tag="{Binding}" Style="{StaticResource PickCellButton}" ToolTip="جميع دفعات العملاء معروضة فوراً — الأقدم أولاً (FIFO)"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!-- §1.50.69 FIX: الدفعة/الشحنة برقم سند استلام الشحنات (ShipmentNo = DocumentNumber) بدل LotCode الداخلي -->
+                            <DataGridTemplateColumn Header="الدفعة / سند الاستلام 📦 *" Width="1.2*" MinWidth="140">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Click="LotCode_Click" Tag="{Binding}" Style="{StaticResource PickCellButton}">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding ShipmentNo}" FontWeight="Bold" Foreground="{DynamicResource ThemeTextBrush}"/>
+                                                    <TextBlock Text=" - " Foreground="#9A9782" Margin="2,0"/>
+                                                    <TextBlock Text="{Binding LotCode}" FontSize="10" Foreground="{DynamicResource ThemeSecondaryTextBrush}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Button.Content>
+                                            <Button.ToolTip>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding ShipmentNo, StringFormat=سند الاستلام: {0}}" FontWeight="Bold"/>
+                                                    <TextBlock Text="{Binding LotCode, StringFormat=الدفعة: {0}}"/>
+                                                    <TextBlock Text="جميع الدفعات معروضة FIFO - رقم السند هو رقم سند استلام الشحنات"/>
+                                                </StackPanel>
+                                            </Button.ToolTip>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="الصنف التام 🏷️ *" Width="1.3*" MinWidth="130">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding ProductName}" Click="ProductName_Click" Tag="{Binding}" Style="{StaticResource PickCellButton}" ToolTip="جميع الأصناف التامة معروضة فوراً"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!-- §1.50.67 PREVIOUS DESIGN + FIX: الوحدة بوحدتين + المتاح بوحدتين — تصميم سابق متفق عليه -->
+                            <DataGridTextColumn Header="الوحدة" Binding="{Binding UnitDisplay}" Width="110" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="FontSize" Value="11"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="ToolTip" Value="{Binding UnitDisplay}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="المتاح" Binding="{Binding AvailableDisplay}" Width="130" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="FontSize" Value="11"/>
+                                        <Setter Property="ToolTip" Value="{Binding AvailableDisplay}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="الكراتين *" Binding="{Binding CartonsText, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" Width="75">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="الوزن كجم ⚖️" Binding="{Binding QtyKg, StringFormat=N1}" Width="85" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="المتبقي بعد" Binding="{Binding RemainingAfterKg, StringFormat=N1}" Width="85" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn x:Name="DateColumn" Header="تاريخ الإنتاج 📅" Width="135">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding DateValue, UpdateSourceTrigger=PropertyChanged}" FontSize="11" Padding="2,0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="الوردية" Binding="{Binding ShiftName}" Width="80" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="الخط" Binding="{Binding LineName}" Width="70" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Header="حذف" Width="44">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="✕" Padding="4,0" Style="{StaticResource ErpDangerButton}" Click="RemoveRow_Click" Tag="{Binding No}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock x:Name="GridHintPlan" FontSize="11.5" TextWrapping="Wrap" Margin="0,6,0,0"
+                        Text="لا توجد بنود — اضغط (العميل) أو (الدفعة) أو (الصنف) داخل صف جديد → جميع الدفعات المتاحة معروضة فوراً مرتبة من الأقدم وصولاً. صف جديد يظهر تلقائياً بعد كل اختيار."/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

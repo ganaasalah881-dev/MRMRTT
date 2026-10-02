@@ -1,0 +1,122 @@
+﻿<Window x:Class="DatesErp.Desktop.Views.OrderDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="أمر التشغيل" Width="1020" Height="660"
+        FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner">
+    <DockPanel Background="#F1F5F9">
+        <!-- شريط العنوان -->
+        <Border DockPanel.Dock="Top" Padding="12,6">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#0A246A" Offset="0"/>
+                    <GradientStop Color="#3A6EA5" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <DockPanel>
+                <TextBlock x:Name="HeadTitle" DockPanel.Dock="Right" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                <TextBlock x:Name="HeadStatus" DockPanel.Dock="Left" Foreground="White" FontSize="12" FontWeight="Bold"/>
+            </DockPanel>
+        </Border>
+
+        <!-- لافتة سبب الحالة (إيقاف...) — §B97/B98 -->
+        <Border x:Name="ReasonBanner" DockPanel.Dock="Top" Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="0,0,0,1" Padding="12,6">
+            <TextBlock x:Name="ReasonText" Foreground="#991B1B" FontWeight="Bold" FontSize="12" TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- شريط الإجراء: أزرار الدور × الحالة -->
+        <Border DockPanel.Dock="Bottom" Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="0,1,0,0" Padding="10,8">
+            <StackPanel Orientation="Horizontal">
+                <!-- §B110: بدء موحد اللفظ مع بطاقة الأمر «🏭 بدء الإنتاج» | الإيقاف والإلغاء خطر -->
+                <Button x:Name="BtnStart" Content="🏭 بدء الإنتاج" Style="{StaticResource ErpPrimaryButton}" Margin="0,0,8,0" Click="Start_Click"/>
+                <Button x:Name="BtnStop" Content="⏸ إيقاف (بسبب)" Style="{StaticResource ErpDangerButton}" Margin="0,0,8,0" Click="Stop_Click"/>
+                <Button x:Name="BtnResume" Content="▶ استئناف" Style="{StaticResource ErpButton}" Margin="0,0,8,0" Click="Resume_Click"/>
+                <Button x:Name="BtnClose" Content="🧾 تسجيل الفعلي وتسليمه" Style="{StaticResource ErpPrimaryButton}" Margin="0,0,8,0" Click="CloseDay_Click"/>
+                <Button x:Name="BtnCancel" Content="🗑 إلغاء الأمر" Style="{StaticResource ErpDangerButton}" Margin="0,0,8,0" Click="Cancel_Click"/>
+                <Button Content="✖ إغلاق" Style="{StaticResource ErpButton}" Click="Close_Click"/>
+            </StackPanel>
+        </Border>
+
+        <TabControl Margin="8" Background="White">
+            <TabItem Header="📋 الأمر والبنود">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0" Margin="0,0,0,8">
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="رقم الأمر" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FNumber" FontSize="13" FontWeight="Bold" Foreground="#0A246A"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="العميل" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FCustomer" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="تاريخ الإنتاج" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FDate" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="الوردية / الخط" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FShift" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="الخطة المصدر" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FPlan" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="الدفعة" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FLot" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F8FAFC" BorderBrush="#94A3B8" BorderThickness="1" Padding="10,6" Margin="0,0,8,4">
+                            <StackPanel>
+                                <TextBlock Text="المخطط" FontSize="10.5" Foreground="#555"/>
+                                <TextBlock x:Name="FPlanned" FontSize="13" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="#F0FDF4" BorderBrush="#86EFAC" BorderThickness="1" Padding="10,6">
+                            <StackPanel>
+                                <TextBlock Text="المنتج حتى الآن" FontSize="10.5" Foreground="#166534"/>
+                                <TextBlock x:Name="FProduced" FontSize="13" FontWeight="Bold" Foreground="#166534"/>
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
+                    <DataGrid x:Name="ItemsGrid" Grid.Row="1" IsReadOnly="True" FontSize="11.5" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="الصنف" Binding="{Binding ProductName}" Width="*"/>
+                            <DataGridTextColumn Header="العبوة" Binding="{Binding PackName}" Width="100"/>
+                            <DataGridTextColumn Header="العميل" Binding="{Binding CustomerName}" Width="*"/>
+                            <DataGridTextColumn Header="الدفعة" Binding="{Binding LotCode}" Width="90"/>
+                            <DataGridTextColumn Header="المخطط (كرتون)" Binding="{Binding PlannedCartons}" Width="100"/>
+                            <DataGridTextColumn Header="المخطط (كجم)" Binding="{Binding PlannedKg}" Width="100"/>
+                            <DataGridTextColumn Header="المنتج (كرتون)" Binding="{Binding ProducedCartons}" Width="100"/>
+                            <DataGridTextColumn Header="المنتج (كجم)" Binding="{Binding ProducedKg}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="📜 تاريخ الأمر">
+                <DataGrid x:Name="HistoryGrid" Margin="8" IsReadOnly="True" FontSize="11.5" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="الوقت" Binding="{Binding Time}" Width="140"/>
+                        <DataGridTextColumn Header="المستخدم" Binding="{Binding User}" Width="140"/>
+                        <DataGridTextColumn Header="الإجراء" Binding="{Binding Action}" Width="130"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

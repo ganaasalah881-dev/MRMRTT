@@ -1,0 +1,100 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.PermissionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft">
+ <!-- §v1.50.33: النمط الكلاسيكي المعتمد مع تصويبات المستخدم —
+      رأس الصفحة: قائمة منسدلة للهدف (دور/مستخدم) كالصورة المرجعية «رقم X — الاسم»،
+      والمصفوفة معطّلة تماماً حتى يُختار هدف صريح (لا منح صامت لهدف افتراضي)،
+      شجرة الوحدات أوسع وأكبر خطاً، وتحميل دفاعي: أي عطل يظهر بتفاصيله داخل الشاشة. -->
+ <DockPanel>
+
+  <!-- ═ شريط الأدوات العلوي + محدد الهدف ═ -->
+  <Border DockPanel.Dock="Top" Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" Padding="8,5">
+   <StackPanel>
+    <WrapPanel>
+     <Button x:Name="SaveBtn" Content="💾 حفظ التغييرات" Style="{StaticResource ErpPrimaryButton}" Click="Save_Click" ToolTip="حفظ فرق التغييرات مع ملخص وتأكيد الحساسة"/>
+     <Button Content="✅ تحديد الكل الظاهر" Style="{StaticResource ErpButton}" Click="SelectAll_Click" Margin="6,0,0,0" ToolTip="منح كل عمليات الشاشات المعروضة بعد التصفية"/>
+     <Button Content="⬜ إلغاء الكل الظاهر" Style="{StaticResource ErpButton}" Click="ClearAll_Click" Margin="6,0,0,0"/>
+     <Button Content="↩ إعادة للوراثة" Style="{StaticResource ErpButton}" Click="ResetToInherited_Click" Margin="6,0,0,0" ToolTip="خاص بالمستخدمين: حذف كل استثناءاته وعودته لما يرثه دوره"/>
+     <Button Content="📋 نسخ الصلاحيات" Style="{StaticResource ErpButton}" Click="Copy_Click" Margin="6,0,0,0"/>
+     <Button Content="⚖ مقارنة" Style="{StaticResource ErpButton}" Click="Compare_Click" Margin="6,0,0,0"/>
+     <Button Content="📜 السجل" Style="{StaticResource ErpButton}" Click="Audit_Click" Margin="6,0,0,0"/>
+     <Button Content="🎭 دور جديد" Style="{StaticResource ErpPrimaryButton}" Click="NewRole_Click" Margin="6,0,0,0"/>
+     <Button Content="🤝 تفويض زمني" Style="{StaticResource ErpButton}" Click="Delegation_Click" Margin="6,0,0,0"/>
+     <Button Content="🚫 تعطيل المحدد" Style="{StaticResource ErpDangerButton}" Click="Deactivate_Click" Margin="6,0,0,0"/>
+    </WrapPanel>
+    <!-- §رأس الصفحة — كالصورة المرجعية: اختيار الموظف/الدور قائمة منسدلة أعلى المصفوفة -->
+    <WrapPanel Margin="0,7,0,0">
+     <TextBlock Text="منح/سحب الصلاحية لـ:" FontWeight="Bold" FontSize="13" Foreground="#0A246A" VerticalAlignment="Center"/>
+     <ComboBox x:Name="ModeBox" Width="150" Margin="6,0,0,0" SelectionChanged="Mode_Changed" DisplayMemberPath="Name" SelectedValuePath="Code" ToolTip="اختر أولاً: دور مجموعة أم مستخدم"/>
+     <ComboBox x:Name="TargetBox" Width="330" Margin="8,0,0,0" SelectionChanged="Target_Changed" DisplayMemberPath="Label" SelectedValuePath="Id" ToolTip="اختر الموظف/الدور من القائمة — المصفوفة تبقى معطّلة إلى أن تختار"/>
+    </WrapPanel>
+    <TextBlock x:Name="TargetLabel" Text="اختر الهدف من القائمتين أعلاه — لا يمكن التأشير في المصفوفة قبل اختيار موظف أو دور." FontWeight="Bold" FontSize="12.5" Foreground="#7C3AED" Margin="0,6,0,0" TextWrapping="Wrap"/>
+    <Border x:Name="ErrorBanner" Background="#FDECEA" BorderBrush="#E53935" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,7,0,0" Visibility="Collapsed">
+     <TextBlock x:Name="ErrorText" Foreground="#B71C1C" FontWeight="Bold" TextWrapping="Wrap"/>
+    </Border>
+   </StackPanel>
+  </Border>
+
+  <!-- ═ شريط التدقيق السفلي ═ -->
+  <Border DockPanel.Dock="Bottom" Background="#E2E8D8" BorderBrush="#9AA88E" BorderThickness="1" Padding="8,4">
+   <WrapPanel>
+    <TextBlock FontSize="11.5" Foreground="#37474F"><Run Text="مدخل السجل: " FontWeight="Bold"/><Run x:Name="AuditUserText" Text="—" FontWeight="Bold"/></TextBlock>
+    <TextBlock FontSize="11.5" Foreground="#37474F" Margin="26,0,0,0"><Run Text="تاريخ الإدخال: " FontWeight="Bold"/><Run x:Name="AuditDateText" Text="—"/></TextBlock>
+    <TextBlock FontSize="11.5" Foreground="#37474F" Margin="26,0,0,0"><Run Text="معدل السجل: " FontWeight="Bold"/><Run x:Name="AuditTargetText" Text="—"/></TextBlock>
+   </WrapPanel>
+  </Border>
+
+  <!-- ═ التبويبات الثلاثة ═ -->
+  <TabControl DockPanel.Dock="Bottom" Height="215" Background="#F6F5EE" BorderBrush="#CBD5E1">
+   <TabItem Header="مستخدمو القاعدة">
+    <DataGrid x:Name="UsersAllGrid" AutoGenerateColumns="False" IsReadOnly="True" RowHeight="30" FontSize="12.5"
+              AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" HeadersVisibility="Column" GridLinesVisibility="All" HorizontalGridLinesBrush="{DynamicResource ThemeGridLineBrush}" VerticalGridLinesBrush="{DynamicResource ThemeGridLineBrush}">
+     <DataGrid.Columns>
+      <DataGridTextColumn Header="رقم المستخدم" Binding="{Binding Id}" Width="90"/>
+      <DataGridTextColumn Header="اسم المستخدم" Binding="{Binding FullName}" Width="*"/>
+      <DataGridTextColumn Header="رقم الدخول" Binding="{Binding UserName}" Width="130"/>
+      <DataGridTextColumn Header="الأدوار" Binding="{Binding RolesText}" Width="*"/>
+      <DataGridCheckBoxColumn Header="نشط" Binding="{Binding IsActive}" Width="60"/>
+     </DataGrid.Columns>
+    </DataGrid>
+   </TabItem>
+   <TabItem Header="صلاحيات مجموعة المستخدم">
+    <DockPanel>
+     <TextBlock DockPanel.Dock="Top" Text="اختيار الدور هنا يعينه تلقائياً في القائمة العلوية — وتنعكس صلاحياته في المصفوفة للتحرير." Margin="8,6,8,4" Foreground="#475569" FontSize="11.5"/>
+     <ListBox x:Name="RolesList" SelectionChanged="Role_Selected" BorderThickness="0" Background="Transparent" Margin="8,0,8,6" FontSize="13"/>
+    </DockPanel>
+   </TabItem>
+   <TabItem Header="صلاحيات مستخدم">
+    <DockPanel>
+     <StackPanel DockPanel.Dock="Top" Margin="8,6,8,4">
+      <TextBox x:Name="UserSearchBox" TextChanged="UserSearch_Changed" ToolTip="بحث بالاسم/الكود/الدور" Width="340" HorizontalAlignment="Left"/>
+      <TextBlock Text="اختيار المستخدم هنا يعينه في القائمة العلوية — تُحرَّر استثناءاته فوق صلاحيات مجموعته: ✖ إلغاء = منع صريح، ✔ = منح، والعودة = وراثة." Margin="0,5,0,0" Foreground="#475569" FontSize="11.5" TextWrapping="Wrap"/>
+     </StackPanel>
+     <ListBox x:Name="UsersList" SelectionChanged="User_Selected" BorderThickness="0" Background="Transparent" Margin="8,0,8,6" FontSize="13"/>
+    </DockPanel>
+   </TabItem>
+  </TabControl>
+
+  <!-- ═ يمين: شجرة الوحدات — أوسع وأكبر (طلب المستخدم) ═ -->
+  <Border DockPanel.Dock="Right" Width="310" Style="{StaticResource Card}" Margin="0,0,8,0">
+   <DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="🌳 وحدات النظام" FontWeight="Bold" FontSize="14" Foreground="#0A246A" Margin="0,0,0,5"/>
+    <TextBox DockPanel.Dock="Top" x:Name="TreeSearchBox" TextChanged="TreeSearch_Changed" FontSize="13" Margin="0,0,0,7" ToolTip="بحث في الوحدات والشاشات — يصفي الشجرة"/>
+    <TreeView x:Name="ResTree" FontSize="13" BorderThickness="0" Background="Transparent"/>
+   </DockPanel>
+  </Border>
+
+  <!-- ═ الوسط: مصفوفة الشاشات × العمليات ═ -->
+  <Border Style="{StaticResource Card}">
+   <DockPanel>
+    <TextBlock DockPanel.Dock="Top" x:Name="MatrixTitle" Text="مصفوفة الصلاحيات — معطّلة حتى اختيار الهدف من القائمة أعلاه"
+               FontWeight="Bold" FontSize="13" Foreground="#0A246A" Margin="0,0,0,6" TextWrapping="Wrap"/>
+    <DataGrid x:Name="MatrixGrid" IsEnabled="False" AutoGenerateColumns="False" RowHeight="30" ColumnHeaderHeight="34" FontSize="12.5"
+              AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" Background="{DynamicResource ThemeTableBackgroundBrush}" RowBackground="{DynamicResource ThemeTableBackgroundBrush}"
+              GridLinesVisibility="All" HorizontalGridLinesBrush="{DynamicResource ThemeGridLineBrush}" VerticalGridLinesBrush="{DynamicResource ThemeGridLineBrush}"
+              HeadersVisibility="Column" BorderBrush="{DynamicResource ThemeGridLineBrush}" CanUserAddRows="False" CanUserSortColumns="False"/>
+   </DockPanel>
+  </Border>
+ </DockPanel>
+</UserControl>

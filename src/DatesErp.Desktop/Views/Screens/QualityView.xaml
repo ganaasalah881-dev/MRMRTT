@@ -1,0 +1,127 @@
+<UserControl x:Class="DatesErp.Desktop.Views.Screens.QualityView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DatesErp.Desktop.Views.Screens"
+             FlowDirection="RightToLeft">
+ <!-- §v1.50.28: التدفق المعتمد — الفحص ينزل مباشرة من تسليم الإنتاج:
+      ١) المصدر تسليم الإنتاج (بلا إعادة اختيار الصنف) ٢) كل الأصناف المنتَجة تنزل بكمياتها
+      ٣) النتائج صفات جودة لنفس الصنف (صفات لا أصناف) بنسبتها ٤) المعايير المعتمدة تظهر تلقائياً
+      ٥) الحفظ يشترط: مجموع صفات كل صنف = كميته المستلمة. شاشة واحدة بلا تمرير عمودي. -->
+ <DockPanel LastChildFill="True" Margin="12">
+
+  <!-- ١) الترويسة -->
+  <StackPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+   <TextBlock Text="🔬 الفحص والجودة" FontSize="22" FontWeight="Bold" Foreground="#163B46"/>
+   <TextBlock Text="ينزل مباشرة من تسليم الإنتاج — النتائج صفات جودة للصنف نفسه — وليست أصنافاً جديدة إطلاقاً." Margin="0,4,0,0" Foreground="#536970"/>
+  </StackPanel>
+
+  <!-- ٢) مصدر الفحص: تسليم الإنتاج -->
+  <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Padding="10,6" Margin="0,0,0,6">
+   <StackPanel>
+    <WrapPanel VerticalAlignment="Center">
+     <TextBlock Text="مصدر الفحص:" FontWeight="Bold" FontSize="13" VerticalAlignment="Center" Margin="0,0,8,0"/>
+     <ComboBox x:Name="SourceBox" Width="520" SelectionChanged="Source_Changed" FontSize="12.5"/>
+     <TextBlock x:Name="CheckNoChip" Text="— لا فحص محفوظ بعد" FontSize="11.5" FontWeight="Bold" Foreground="#0A246A" VerticalAlignment="Center" Margin="12,0,0,0"/>
+    </WrapPanel>
+    <TextBlock x:Name="StatusLabel" TextWrapping="Wrap" Margin="0,5,0,0" FontWeight="Bold" Foreground="#1F2937"
+               Text="اختر تسليم إنتاج من الأعلى — تنزل أصنافه المنتَجة تلقائياً بكمياتها."/>
+   </StackPanel>
+  </Border>
+
+  <!-- ٣) الأصناف المستلمة للفحص — نازلة تلقائياً -->
+  <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Padding="10,5" Margin="0,0,0,6">
+   <WrapPanel x:Name="ItemsPanel" VerticalAlignment="Center">
+    <TextBlock Text="الأصناف المستلمة للفحص:" FontWeight="Bold" FontSize="12.5" VerticalAlignment="Center" Margin="0,0,10,0"/>
+   </WrapPanel>
+  </Border>
+
+  <!-- ٦) شريط الحفظ (أسفل ثابت) -->
+  <Border DockPanel.Dock="Bottom" Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" Padding="10,6">
+   <DockPanel>
+    <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center">
+     <TextBlock x:Name="TotalsLabel" FontWeight="Bold" FontSize="12" Foreground="#0A246A" Text="الإجمالي: —"/>
+     <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+      <RadioButton x:Name="DecisionPassed" Content="✅ مطابق — إفراج" IsChecked="True" FontSize="12" Margin="0,0,10,0"/>
+      <RadioButton x:Name="DecisionQuarantine" Content="⏸ تحريز مؤقت" FontSize="12" Margin="0,0,10,0"/>
+      <RadioButton x:Name="DecisionRejected" Content="⛔ مرفوض" FontSize="12"/>
+     </StackPanel>
+    </StackPanel>
+    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+     <Button x:Name="SaveButton" Content="💾 حفظ نتائج الفحص" Style="{StaticResource ErpApproveButton}" Click="Save_Click"/>
+     <Button x:Name="ApproveButton" Content="✅ اعتماد الفحص" Style="{StaticResource ErpPrimaryButton}" Margin="8,0,0,0" Click="Approve_Click"/>
+     <Button Content="🖨 طباعة المحضر" Style="{StaticResource ErpButton}" Margin="8,0,0,0" Click="Print_Click"/>
+    </StackPanel>
+    <TextBlock Text="الحفظ يتحقق آلياً: مجموع صفات كل صنف = كميته المستلمة للفحص، والاعتماد بعد الحفظ." FontSize="11.5" Foreground="#6B7280" VerticalAlignment="Center" Margin="14,0,14,0" TextWrapping="Wrap"/>
+   </DockPanel>
+  </Border>
+
+  <!-- ٥) معايير الفحص المعتمدة (فوق الشريط) -->
+  <Border DockPanel.Dock="Bottom" Style="{StaticResource Card}" Margin="0,0,0,6">
+   <DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="معايير الفحص المعتمدة — من المواصفة القياسية المعتمدة للصنف، تُدخل نتائجها بوحدتها" FontWeight="Bold" FontSize="12.5" Foreground="#1F2937" Margin="0,0,0,4"/>
+    <DataGrid x:Name="CriteriaGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+              MinHeight="86" MaxHeight="120" RowHeight="30" ColumnHeaderHeight="32" FontSize="12.5"
+              AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" Background="{DynamicResource ThemeTableBackgroundBrush}" RowBackground="{DynamicResource ThemeTableBackgroundBrush}"
+              GridLinesVisibility="All" HorizontalGridLinesBrush="{DynamicResource ThemeGridLineBrush}" VerticalGridLinesBrush="{DynamicResource ThemeGridLineBrush}"
+              HeadersVisibility="Column" BorderBrush="{DynamicResource ThemeGridLineBrush}" SelectionUnit="Cell"
+              PreviewMouseLeftButtonDown="Grid_SingleClickEdit">
+     <DataGrid.RowStyle>
+         <Style TargetType="DataGridRow">
+             <Setter Property="Background" Value="White"/>
+             <Style.Triggers>
+                 <DataTrigger Binding="{Binding IsInvalid}" Value="True">
+                     <Setter Property="Background" Value="{StaticResource InvalidRowBrush}"/>
+                     <Setter Property="ToolTip" Value="{Binding ValidationError}"/>
+                 </DataTrigger>
+             </Style.Triggers>
+         </Style>
+     </DataGrid.RowStyle>
+     <DataGrid.Columns>
+      <DataGridTextColumn Header="المعيار" Binding="{Binding Name}" IsReadOnly="True" Width="*"/>
+      <DataGridTextColumn Header="الوحدة" Binding="{Binding UnitLabel}" IsReadOnly="True" Width="70"/>
+      <DataGridTextColumn Header="الحد الأدنى" Binding="{Binding MinText}" IsReadOnly="True" Width="100"/>
+      <DataGridTextColumn Header="الحد الأعلى" Binding="{Binding MaxText}" IsReadOnly="True" Width="100"/>
+      <DataGridTextColumn Header="القياس المسجل" Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Width="130"/>
+      <DataGridTextColumn Header="الحالة" Binding="{Binding StatusAr}" IsReadOnly="True" Width="120"/>
+     </DataGrid.Columns>
+    </DataGrid>
+   </DockPanel>
+  </Border>
+
+  <!-- ٤) نتائج الفحص — مصفوفة بنفس شكل خطة الإنتاج: صف لكل عميل×صنف×عبوة، وصفات الجودة أعمدة -->
+  <Border Style="{StaticResource Card}">
+   <DockPanel>
+    <TextBlock DockPanel.Dock="Top" Margin="0,0,0,4" FontWeight="Bold" FontSize="12.5" Foreground="#1F2937"
+               Text="نتائج الفحص — صف لكل عميل وصنف وعبوة كما في خطة الإنتاج، وصفات الجودة أعمدة تُدخل كمياتها"/>
+    <DockPanel>
+     <Border DockPanel.Dock="Bottom" Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" Padding="8,4" Margin="0,5,0,0">
+      <TextBlock x:Name="EqLabel" TextWrapping="Wrap" FontWeight="Bold" FontSize="12" Foreground="#1F2937"
+                 Text="معادلة الحفظ: مجموع صفات كل صنف = كميته المستلمة للفحص."/>
+     </Border>
+     <!-- الأعمدة الثابتة + عمود لكل صفة جودة + الإجمالي تُبنى في الكود من صفات الصنف المعرفة -->
+     <DataGrid x:Name="ResultsGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+               MinRowHeight="38" ColumnHeaderHeight="36" FontSize="13"
+               ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
+               AlternatingRowBackground="{DynamicResource ThemeAlternateRowBrush}" Background="{DynamicResource ThemeTableBackgroundBrush}" RowBackground="{DynamicResource ThemeTableBackgroundBrush}"
+               GridLinesVisibility="All" HorizontalGridLinesBrush="{DynamicResource ThemeGridLineBrush}" VerticalGridLinesBrush="{DynamicResource ThemeGridLineBrush}"
+               HeadersVisibility="Column" BorderBrush="{DynamicResource ThemeGridLineBrush}" SelectionUnit="Cell"
+               CellEditEnding="Results_CellEditEnding"
+               PreparingCellForEdit="Grid_PreparingCellForEdit"
+               PreviewMouseLeftButtonDown="Grid_SingleClickEdit">
+               <DataGrid.RowStyle>
+                   <Style TargetType="DataGridRow">
+                       <Setter Property="Background" Value="White"/>
+                       <Style.Triggers>
+                           <DataTrigger Binding="{Binding IsInvalid}" Value="True">
+                               <Setter Property="Background" Value="{StaticResource InvalidRowBrush}"/>
+                               <Setter Property="ToolTip" Value="{Binding ValidationError}"/>
+                           </DataTrigger>
+                       </Style.Triggers>
+                   </Style>
+               </DataGrid.RowStyle>
+              </DataGrid>
+    </DockPanel>
+   </DockPanel>
+  </Border>
+ </DockPanel>
+</UserControl>

@@ -1,0 +1,45 @@
+﻿<Window x:Class="DatesErp.Desktop.Views.ProductPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="بحث واختيار صنف" Width="800" Height="520"
+        FlowDirection="RightToLeft" WindowStartupLocation="CenterOwner"
+        Background="#F8FAFC" ShowInTaskbar="False" ResizeMode="CanResize">
+    <DockPanel Margin="12">
+        <!-- شريط البحث -->
+        <Border DockPanel.Dock="Top" Style="{StaticResource Card}" Margin="0,0,0,8" Padding="10">
+            <StackPanel>
+                <TextBlock Text="🔍 ابحث برقم الصنف أو اسم الصنف — اكتب جزءاً من الرقم أو الاسم" FontWeight="Bold" FontSize="12" Foreground="#0A246A" Margin="0,0,0,6"/>
+                <DockPanel>
+                    <TextBlock Text="بحث:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,8,0"/>
+                    <TextBox x:Name="SearchBox" FontSize="14" Padding="8,6" TextChanged="SearchBox_TextChanged" ToolTip="اكتب رقم الصنف أو اسمه — مثال: 001 أو سكري"/>
+                </DockPanel>
+                <TextBlock x:Name="CountText" Text="—" FontSize="11" Foreground="#555" Margin="0,6,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- جدول الأصناف -->
+        <Border DockPanel.Dock="Top" Style="{StaticResource WhiteCard}" Margin="0,0,0,8">
+            <DataGrid x:Name="ProductsGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                      RowHeight="32" FontSize="13" CanUserAddRows="False"
+                      MouseDoubleClick="ProductsGrid_DoubleClick"
+                      SelectionMode="Single" SelectionUnit="FullRow">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="رقم الصنف" Binding="{Binding ProductCode}" Width="120"/>
+                    <DataGridTextColumn Header="اسم الصنف" Binding="{Binding ProductNameAr}" Width="*"/>
+                    <DataGridTextColumn Header="الوحدة" Binding="{Binding UnitOfMeasure}" Width="90"/>
+                    <DataGridTextColumn Header="المجموعة" Binding="{Binding GroupCode}" Width="80"/>
+                    <DataGridTextColumn Header="النوع" Binding="{Binding ItemType}" Width="80"/>
+                    <DataGridTextColumn Header="العبوة الافتراضية" Binding="{Binding DefaultPackName}" Width="130"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- أزرار -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="✅ اختيار" Style="{StaticResource ErpPrimaryButton}" Margin="0,0,8,0" Click="Ok_Click" IsDefault="True"/>
+            <Button Content="✖ إلغاء" Style="{StaticResource ErpButton}" Click="Cancel_Click" IsCancel="True"/>
+        </StackPanel>
+        <TextBlock Text="تلميح: اضغط Enter للاختيار، أو نقر مزدوج على الصنف. البيانات الأساسية (رقم/اسم/وحدة) تُعبأ تلقائياً للقراءة فقط."
+                   TextWrapping="Wrap" FontSize="11" Foreground="#666" Margin="0,8,0,0" DockPanel.Dock="Bottom"/>
+    </DockPanel>
+</Window>

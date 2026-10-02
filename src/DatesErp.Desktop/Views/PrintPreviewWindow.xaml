@@ -1,0 +1,144 @@
+<Window x:Class="DatesErp.Desktop.Views.PrintPreviewWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="معاينة قبل الطباعة" Width="1150" Height="780" MinWidth="640" MinHeight="440"
+ WindowStartupLocation="CenterOwner" WindowState="Maximized" FlowDirection="RightToLeft" Background="#F8FAFC">
+ <!-- §43: معاينة بهوية القوالب المرجعية المعتمدة: شريط slate داكن، زر طباعة بتدرج أخضر، وخلفية فاتحة تُبرز الورقة المؤطّرة -->
+ <Window.Resources>
+  <Style x:Key="ToolBtn" TargetType="Button">
+   <Setter Property="Foreground" Value="#FFFFFF"/>
+   <Setter Property="Background" Value="#26FFFFFF"/>
+   <Setter Property="BorderThickness" Value="0"/>
+   <Setter Property="Padding" Value="12,6"/>
+   <Setter Property="Margin" Value="0,0,6,0"/>
+   <Setter Property="FontSize" Value="12.5"/>
+   <Setter Property="FontWeight" Value="Bold"/>
+   <Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template">
+    <Setter.Value>
+     <ControlTemplate TargetType="Button">
+      <Border x:Name="BdTool" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+       <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <ControlTemplate.Triggers>
+       <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="BdTool" Property="Background" Value="#40FFFFFF"/></Trigger>
+       <Trigger Property="IsPressed" Value="True"><Setter TargetName="BdTool" Property="Background" Value="#14FFFFFF"/></Trigger>
+      </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+  </Style>
+  <Style x:Key="GreenGradBtn" TargetType="Button">
+   <Setter Property="Foreground" Value="#FFFFFF"/>
+   <Setter Property="BorderThickness" Value="0"/>
+   <Setter Property="Padding" Value="20,7"/>
+   <Setter Property="Margin" Value="0,0,10,0"/>
+   <Setter Property="FontSize" Value="13"/>
+   <Setter Property="FontWeight" Value="Bold"/>
+   <Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template">
+    <Setter.Value>
+     <ControlTemplate TargetType="Button">
+      <Border x:Name="BdGreen" CornerRadius="6" Padding="{TemplateBinding Padding}">
+       <Border.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+         <GradientStop Color="#16A34A" Offset="0"/>
+         <GradientStop Color="#15803D" Offset="1"/>
+        </LinearGradientBrush>
+       </Border.Background>
+       <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <ControlTemplate.Triggers>
+       <Trigger Property="IsMouseOver" Value="True">
+        <Setter TargetName="BdGreen" Property="Background">
+         <Setter.Value>
+          <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+           <GradientStop Color="#22C55E" Offset="0"/>
+           <GradientStop Color="#16A34A" Offset="1"/>
+          </LinearGradientBrush>
+         </Setter.Value>
+        </Setter>
+       </Trigger>
+       <Trigger Property="IsPressed" Value="True"><Setter TargetName="BdGreen" Property="Background" Value="#15803D"/></Trigger>
+      </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+  </Style>
+  <Style x:Key="GhostBtn" TargetType="Button">
+   <Setter Property="Foreground" Value="#DCFCE7"/>
+   <Setter Property="Background" Value="Transparent"/>
+   <Setter Property="BorderBrush" Value="#86EFAC"/>
+   <Setter Property="BorderThickness" Value="1"/>
+   <Setter Property="Padding" Value="14,6"/>
+   <Setter Property="Margin" Value="0,0,10,0"/>
+   <Setter Property="FontSize" Value="12.5"/>
+   <Setter Property="FontWeight" Value="Bold"/>
+   <Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template">
+    <Setter.Value>
+     <ControlTemplate TargetType="Button">
+      <Border x:Name="BdGhost" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+       <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <ControlTemplate.Triggers>
+       <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="BdGhost" Property="Background" Value="#1A16A34A"/></Trigger>
+       <Trigger Property="IsPressed" Value="True"><Setter TargetName="BdGhost" Property="Background" Value="#3316A34A"/></Trigger>
+      </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+  </Style>
+  <Style x:Key="VSep" TargetType="Rectangle">
+   <Setter Property="Width" Value="1"/>
+   <Setter Property="Fill" Value="#33FFFFFF"/>
+   <Setter Property="Margin" Value="4,2,10,2"/>
+   <Setter Property="VerticalAlignment" Value="Stretch"/>
+  </Style>
+ </Window.Resources>
+ <DockPanel>
+  <Border DockPanel.Dock="Top" Background="#1E293B" BorderBrush="#0F172A" BorderThickness="0,0,0,1" Padding="18,12,18,10">
+   <StackPanel>
+    <Grid Margin="0,0,0,10">
+     <TextBlock x:Name="PreviewTitle" FontSize="15" FontWeight="Bold" Foreground="#FFFFFF" TextWrapping="Wrap"
+                VerticalAlignment="Center" HorizontalAlignment="Right"/>
+     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#94A3B8" FontSize="12.5">
+      <Run Text="صفحة "/><Run Text="{Binding MasterPageNumber, ElementName=Viewer, Mode=OneWay}"/><Run Text=" / "/><Run x:Name="PageCountText"/>
+     </TextBlock>
+    </Grid>
+    <WrapPanel VerticalAlignment="Center">
+     <Button Content="طباعة الآن" Style="{StaticResource GreenGradBtn}" Click="Print_Click" ToolTip="اختيار الطابعة والورق ونطاق الصفحات؛ ملاءمة المساحة القابلة للطباعة"/>
+     <Button x:Name="PdfBtn" Content="حفظ PDF مطابق" Style="{StaticResource GhostBtn}" Click="Pdf_Click" ToolTip="نسخة صور عالية الدقة 300 DPI مطابقة لما تراه"/>
+     <Rectangle Style="{StaticResource VSep}"/>
+     <Button Content="السابق" Style="{StaticResource ToolBtn}" Click="Previous_Click"/>
+     <Button Content="التالي" Style="{StaticResource ToolBtn}" Click="Next_Click"/>
+     <Rectangle Style="{StaticResource VSep}"/>
+     <Button Content="−" Style="{StaticResource ToolBtn}" Click="ZoomOut_Click" ToolTip="تصغير"/>
+     <Slider x:Name="ZoomSlider" Width="140" Minimum="40" Maximum="300" Value="100" ValueChanged="Zoom_Changed" VerticalAlignment="Center" Margin="6,0"/>
+     <Button Content="+" Style="{StaticResource ToolBtn}" Click="ZoomIn_Click" ToolTip="تكبير"/>
+     <TextBlock x:Name="ZoomLabel" Text="100%" Foreground="#E2E8F0" FontSize="12.5" VerticalAlignment="Center" Margin="8,0,4,0"/>
+     <Button Content="ملاءمة العرض" Style="{StaticResource ToolBtn}" Click="Fit_Click"/>
+     <Button Content="100%" Style="{StaticResource ToolBtn}" Click="Reset_Click"/>
+     <Rectangle Style="{StaticResource VSep}"/>
+     <Button Content="إغلاق" Style="{StaticResource ToolBtn}" Click="Close_Click"/>
+    </WrapPanel>
+   </StackPanel>
+  </Border>
+  <Border DockPanel.Dock="Bottom" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="16,7">
+   <Grid>
+    <TextBlock Foreground="#64748B" FontSize="11.5" TextWrapping="Wrap" HorizontalAlignment="Right"
+               Text="الصفحات ثابتة: تغيير التكبير لا يعيد توزيعها. قد يصغّر برنامج الطباعة الصفحة لتناسب هوامش الطابعة."/>
+    <TextBlock Foreground="#94A3B8" FontSize="11.5" HorizontalAlignment="Left" Text="نظام التصنيع — الإصدار 1.50.74"/>
+   </Grid>
+  </Border>
+  <DocumentViewer x:Name="Viewer" Background="#E2E8F0" FlowDirection="LeftToRight">
+   <DocumentViewer.CommandBindings><CommandBinding Command="ApplicationCommands.Print" Executed="ViewerPrint_Executed"/></DocumentViewer.CommandBindings>
+   <DocumentViewer.Template>
+    <ControlTemplate TargetType="DocumentViewer">
+     <ScrollViewer x:Name="PART_ContentHost" CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="{TemplateBinding Background}" Padding="28"/>
+    </ControlTemplate>
+   </DocumentViewer.Template>
+  </DocumentViewer>
+ </DockPanel>
+</Window>
